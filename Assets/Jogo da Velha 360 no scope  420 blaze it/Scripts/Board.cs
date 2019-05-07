@@ -74,10 +74,10 @@ public class Board : MonoBehaviour
 
                     if (CheckWin(positions[Position.lastPos].PieceType)) { //check if one of the player has won
 
-                        if (positions[Position.lastPos].PieceType == 1) {
+                        if (isPlayerTurn) {
                             Debug.Log("Player Won!");
                         }
-                        else if (positions[Position.lastPos].PieceType == 2) {
+                        else if (!isPlayerTurn) {
                             Debug.Log("AI Won!");
                         }
                         
@@ -90,21 +90,21 @@ public class Board : MonoBehaviour
 
             }
 
+            isPlayerTurn = !isPlayerTurn;
             pieceSpawned = false; // sets the update veryfier
+
         }
 
     }
 
     void PutPiece(Vector3 piecePos) {
-        
+
         if (isPlayerTurn) {
-            Instantiate(xObject, piecePos ,Quaternion.identity);
+            Instantiate(xObject, piecePos, Quaternion.identity);
         }
         else {
             Instantiate(oObject, piecePos, Quaternion.identity);//Run MinMax Algorithm and place the piece in the best place
         }
-
-        isPlayerTurn = !isPlayerTurn;
 
     }
 
