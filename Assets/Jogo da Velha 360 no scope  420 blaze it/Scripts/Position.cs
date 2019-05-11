@@ -7,7 +7,7 @@ public class Position : MonoBehaviour
 
     private int boardLocation;
     private bool isOccupied;
-    public int PieceType { get; set; } // is different because I tried testing this new configuration of get/set (that I didnt knew)
+    public int PieceType; // { get; set; } // is different because I tried testing this new configuration of get/set (that I didnt knew)
 
     public static int lastPos = -1; //remember to adjust before restarting scene or something!!!
 
