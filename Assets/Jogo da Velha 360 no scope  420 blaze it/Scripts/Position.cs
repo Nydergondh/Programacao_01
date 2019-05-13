@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Position : MonoBehaviour
 {
-
+    
     private int boardLocation;
     private bool isOccupied;
     public int PieceType; // { get; set; } // is different because I tried testing this new configuration of get/set (that I didnt knew)
