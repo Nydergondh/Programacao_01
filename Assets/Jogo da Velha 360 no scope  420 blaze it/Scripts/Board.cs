@@ -130,10 +130,10 @@ public class Board : MonoBehaviour
     void PutPiece(Vector3 piecePos) {
 
         if (isPlayerTurn) {
-            Instantiate(xObject, piecePos, Quaternion.identity);
+            Instantiate(xObject, piecePos, Quaternion.identity, parentPiece);
         }
         else {
-            Instantiate(oObject, piecePos, Quaternion.identity);//Run MinMax Algorithm and place the piece in the best place
+            Instantiate(oObject, piecePos, Quaternion.identity, parentPiece);//Run MinMax Algorithm and place the piece in the best place
         }
 
     }
@@ -445,7 +445,13 @@ public class Board : MonoBehaviour
         return bestScore;
 
     }
-
+    /*
+    void Calcula(int a, int b, out int x, out int y)
+    {
+        x = a + b;
+        y = a * b;
+    }
+    */
     public struct Jogada
     {
         public int[] tabuleiro;
