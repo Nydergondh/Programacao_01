@@ -67,10 +67,12 @@ public class Board : MonoBehaviour
 
                         Debug.Log("Player Won!");
                         endGame = true;
+                        GetComponentInChildren<CanvasProcess>().thatsAllFolks(endGame);
                     }
                     else if (!CheckWinInt(positions[Position.lastPos].PieceType, tabuleiro) && CheckBoardFullInt(tabuleiro)) {
                         Debug.Log("Deu Velha");
                         endGame = true;
+                        GetComponentInChildren<CanvasProcess>().thatsAllFolks(endGame);
                     }
 
                     break;//stops the loop for going further in case alredy found where the piece has spawned
@@ -112,11 +114,13 @@ public class Board : MonoBehaviour
 
                 Debug.Log("AI Won!");
                 endGame = true;
+                GetComponentInChildren<CanvasProcess>().thatsAllFolks(endGame);
             }
             else if (!CheckWinInt(positions[Position.lastPos].PieceType, tabuleiro) && CheckBoardFullInt(tabuleiro))
             {
                 Debug.Log("Deu Velha");
                 endGame = true;
+                GetComponentInChildren<CanvasProcess>().thatsAllFolks(endGame);
             }
 
             PieceSpawned();
@@ -141,36 +145,6 @@ public class Board : MonoBehaviour
     void PieceSpawned() {
         pieceSpawned = !pieceSpawned;
     }
-
-    /*
-   função Minimax( tabuleiro )
-       se FimDeJogo( tabuleiro )
-           retorne CalcularScore( tabuleiro )
-
-       se OponenteEstáJogando( tabuleiro ) {
-           valor = 9999999
-           para todas ramificações do tabuleiro
-           valor = mínimo(valor,Minimax(ramificação))
-       }
-       senão {
-           valor = -9999999
-           para todas ramificações do tabuleiro
-           valor = máximo(valor,Minimax(ramificação))
-       }
-       retornar valor
-    }
-
-        função CalcularScore(tabuleiro){
-
-            se computadorGanhou então retorna +1;
-
-            se oponenteGanhou então retorna -1;
-
-            retorna 0; //empate
-        } Bruno Ferreira e Sílvia M.W. Moraes Inteligênc
-
-
-    */
 
     private int[] CheckEmptyPos()
     {
@@ -446,7 +420,7 @@ public class Board : MonoBehaviour
 
     }
     /*
-    void Calcula(int a, int b, out int x, out int y)
+    void Calcula(int a, int b, out int x, out int y)    //como funciona os parametros out
     {
         x = a + b;
         y = a * b;
