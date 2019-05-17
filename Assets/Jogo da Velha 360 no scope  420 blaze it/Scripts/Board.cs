@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -509,6 +509,7 @@ public class Board : MonoBehaviour
     }
     //destroy all the elments in the board and reset the positions attributes
     public void ResetStuff() {
+        pieceSpawned = false;
         isPlayerTurn = true;
         endGame = false;
         foreach (Position pos in positions) {
@@ -522,7 +523,8 @@ public class Board : MonoBehaviour
             GameObject obj = ts.gameObject;
             Destroy(obj);                
         }
-        
+
+        StopAllCoroutines();
     }
 
     public void SetDiffculty(int d) {
