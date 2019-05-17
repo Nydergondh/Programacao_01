@@ -8,21 +8,22 @@ public class Board : MonoBehaviour
 
     List<Position> positions;
 
-    [SerializeField] GameObject xObject;
-    [SerializeField] GameObject oObject;
-    [SerializeField] Transform parentPiece;
+    [SerializeField] GameObject xObject = null;
+    [SerializeField] GameObject oObject = null;
+    [SerializeField] Transform parentPiece = null;
 
     public bool isPlayerTurn;
     public bool pieceSpawned;
     public bool endGame;
 
     int bestPlay; //saves the IA best play at minimax
+    int difficulty;
 
     public delegate void OnPieceSpawned();
     public OnPieceSpawned onPieceSpawned;
 
     void Awake() {
-
+        difficulty = 3;
         positions = new List<Position>();
 
         pieceSpawned = false;
@@ -38,7 +39,6 @@ public class Board : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
         int i = 0;
         //fills in the array of positions
         foreach (Position pos in GetComponentsInChildren<Position>()) {
@@ -85,51 +85,93 @@ public class Board : MonoBehaviour
 
 
         // make AI play
-        else if (!isPlayerTurn && !endGame)
-        {
-            //faz um tabuleiro virtual para rodar os testes
-            int[] tabuleiro = CheckEmptyPos();
-            // faz coisas pra desobrir onde jogar
-            MinMax(tabuleiro, isPlayerTurn); //TODO não sei porque funciona PERGUNTAR
-            // mark as occupied
-            foreach (Position pos in positions)
-            {
-
-                if (bestPlay == pos.GetBoardLocation())
-                {
-                    pos.IsOccupied = true;
-                    pos.PieceType = 2;
-                    tabuleiro[bestPlay] = 2;
-                    break;
-                }
-            }
-            //set last pos to best position indentified by minmax
-            Position.lastPos = bestPlay;
-
-            //Spawns new piece and update the variables to make the player play the game
-            PutPiece(positions[Position.lastPos].transform.position);
-
-            if (CheckWinInt(positions[Position.lastPos].PieceType, tabuleiro))
-            { //check if the player has won
-
-                Debug.Log("AI Won!");
-                endGame = true;
-                GetComponentInChildren<CanvasProcess>().thatsAllFolks(endGame);
-            }
-            else if (!CheckWinInt(positions[Position.lastPos].PieceType, tabuleiro) && CheckBoardFullInt(tabuleiro))
-            {
-                Debug.Log("Deu Velha");
-                endGame = true;
-                GetComponentInChildren<CanvasProcess>().thatsAllFolks(endGame);
-            }
-
-            PieceSpawned();
-            isPlayerTurn = !isPlayerTurn;
+        else if (!isPlayerTurn && !endGame) {
+            bool smartPlay = CheckDifficulty();
+            MakePlayAI(smartPlay);
         }
 
     }
 
+    private void MakePlayAI(bool smartPlay) {
 
+        //JOGADA INTELIGENTE
+        if (smartPlay) {
+            print("Jogada Inteligente!");
+            //faz um tabuleiro virtual para rodar os testes
+            int[] tabuleiro = CheckEmptyPos();
+            // faz coisas pra desobrir onde jogar
+            MinMax(tabuleiro, isPlayerTurn); //TODO não sei porque funciona PERGUNTAR
+                                             // mark as occupied
+            PlayInPosition(tabuleiro);
+        }
+
+        //JOGADA BURRA
+        else {
+            int[] tabuleiro = CheckEmptyPos();
+            //faz um tabuleiro virtual para rodar os         
+
+            int[] freePositions = EmptyPositions(tabuleiro);
+            print("Jogada Burra!");
+            bestPlay = freePositions[Random.Range(0, freePositions.Length)];
+
+            PlayInPosition(tabuleiro);
+        }
+
+    }
+
+    private void PlayInPosition(int[] tabuleiro) {
+        foreach (Position pos in positions) {
+
+            if (bestPlay == pos.GetBoardLocation()) {
+                pos.IsOccupied = true;
+                pos.PieceType = 2;
+                tabuleiro[bestPlay] = 2;
+                break;
+            }
+        }
+        //set last pos to best position indentified by minmax
+        Position.lastPos = bestPlay;
+
+        //Spawns new piece and update the variables to make the player play the game
+        PutPiece(positions[Position.lastPos].transform.position);
+
+        if (CheckWinInt(positions[Position.lastPos].PieceType, tabuleiro)) { //check if the player has won
+
+            Debug.Log("AI Won!");
+            endGame = true;
+            GetComponentInChildren<CanvasProcess>().thatsAllFolks(endGame);
+        }
+        else if (!CheckWinInt(positions[Position.lastPos].PieceType, tabuleiro) && CheckBoardFullInt(tabuleiro)) {
+            Debug.Log("Deu Velha");
+            endGame = true;
+            GetComponentInChildren<CanvasProcess>().thatsAllFolks(endGame);
+        }
+
+        PieceSpawned();
+        isPlayerTurn = !isPlayerTurn;
+    }
+    //Returns the number of 
+    private int[] EmptyPositions(int[] tabuleiro) {
+
+        int i = 0;
+        for (int j = 0; j < positions.Count; j++) {
+            if (tabuleiro[j] == 0) {
+                i++;
+            }
+        }
+        int[] newTab = new int[i];
+        int size = i;
+        i = 0;
+
+        for (int j = 0; i < size; j++) {
+            if (tabuleiro[j] == 0) {
+                newTab[i] = j;
+                i++;
+            }
+        }
+
+        return newTab;
+    }
 
     void PutPiece(Vector3 piecePos) {
 
@@ -419,6 +461,7 @@ public class Board : MonoBehaviour
         return bestScore;
 
     }
+
     /*
     void Calcula(int a, int b, out int x, out int y)    //como funciona os parametros out
     {
@@ -431,6 +474,66 @@ public class Board : MonoBehaviour
         public int[] tabuleiro;
         public int score;
         public int index;
+    }
+    //destroy all the elments in the board and reset the positions attributes
+    public void ResetStuff() {
+        isPlayerTurn = true;
+        endGame = false;
+        foreach (Position pos in positions) {
+            pos.PieceType = -1;
+            pos.IsOccupied = false;
+        }
+
+        Position.lastPos = -1;
+
+        foreach (Transform ts in parentPiece) {
+            GameObject obj = ts.gameObject;
+            Destroy(obj);                
+        }
+        
+    }
+
+    public void SetDiffculty(int d) {
+        difficulty = d;
+    }
+
+    private bool CheckDifficulty() {
+        //80% de chance de ser burro
+        if (difficulty == 0) {
+            if (Random.Range(0, 10) < 8) {
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+        //50% de chance de ser burro
+        else if (difficulty == 1) {
+            if (Random.Range(0, 10) < 5) {
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+        //20% de chance de ser burro
+        else if (difficulty == 2) {
+            if (Random.Range(0, 10) < 2) {
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+        //0% de chance de ser burro
+        else if (difficulty == 3) {
+            return true;            
+        }
+
+        else {
+            return false;
+        }
+
     }
 
 }

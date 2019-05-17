@@ -1,13 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Position : MonoBehaviour
 {
     
     private int boardLocation;
-    private bool isOccupied;
+    public bool isOccupied;
     public int PieceType; // { get; set; } // is different because I tried testing this new configuration of get/set (that I didnt knew)
+    public GameObject mainMenu;
+    public GameObject difficultyMenu;
 
     public static int lastPos = -1; //remember to adjust before restarting scene or something!!!
 
@@ -15,7 +18,21 @@ public class Position : MonoBehaviour
         isOccupied = false;
         PieceType = -1;
     }
+    /*
+    void Update() {
+        if (Input.GetMouseButtonDown(0)) {
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
+            if (Physics.Raycast(ray, out hit)) {
+                Transform objectHit = hit.transform;
+                if (objectHit == transform) {
+                    CheckClick();
+                }
+            }
+        }
+    }
+    */
     public void SetBoardLocation (int value){
         boardLocation = value;
     }
@@ -28,15 +45,15 @@ public class Position : MonoBehaviour
         get { return isOccupied; }
         set { isOccupied = value; }
     }    
-
+    
     void OnMouseDown() {
-
-        if (!isOccupied) {
-            isOccupied = true;
-            lastPos = boardLocation;
-            GetComponentInParent<Board>().onPieceSpawned();
-        }       
-
+        if (!EventSystem.current.IsPointerOverGameObject() || (!mainMenu.activeSelf && !difficultyMenu.activeSelf)) {
+            if (!isOccupied) {
+                isOccupied = true;
+                lastPos = boardLocation;
+                GetComponentInParent<Board>().onPieceSpawned();
+            }
+        }
     }
 
 }

@@ -7,7 +7,7 @@ public class Cube_Movement : MonoBehaviour
     [Range(-10f, 10f)]
     [SerializeField] private float xSpeed = 5;
 
-    [SerializeField] Transform trans;
+    [SerializeField] Transform trans = null;
     Vector3 pos;
 
     bool smoothSlow;
