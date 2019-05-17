@@ -12,9 +12,14 @@ public class Board : MonoBehaviour
     [SerializeField] GameObject oObject = null;
     [SerializeField] Transform parentPiece = null;
 
+    public AudioSource audio = null;
+    public AudioClip[] clips;
+
     public bool isPlayerTurn;
     public bool pieceSpawned;
     public bool endGame;
+    private bool isWaitingAIPlay;
+    private bool waitAIPlay;
 
     int bestPlay; //saves the IA best play at minimax
     int difficulty;
@@ -27,7 +32,8 @@ public class Board : MonoBehaviour
         positions = new List<Position>();
 
         pieceSpawned = false;
-        //remove line bellow when finished testing
+        waitAIPlay = false;
+        isWaitingAIPlay = false;
         isPlayerTurn = true;
 
         endGame = false;
@@ -67,10 +73,13 @@ public class Board : MonoBehaviour
 
                         Debug.Log("Player Won!");
                         endGame = true;
+                        
+                        ChangeAudio(1);
                         GetComponentInChildren<CanvasProcess>().thatsAllFolks(endGame);
                     }
                     else if (!CheckWinInt(positions[Position.lastPos].PieceType, tabuleiro) && CheckBoardFullInt(tabuleiro)) {
                         Debug.Log("Deu Velha");
+                        ChangeAudio(1);
                         endGame = true;
                         GetComponentInChildren<CanvasProcess>().thatsAllFolks(endGame);
                     }
@@ -86,10 +95,30 @@ public class Board : MonoBehaviour
 
         // make AI play
         else if (!isPlayerTurn && !endGame) {
-            bool smartPlay = CheckDifficulty();
-            MakePlayAI(smartPlay);
+            if (!waitAIPlay && !isWaitingAIPlay) {
+                StartCoroutine( WaitForAIPlay()); //wait some time to make AI play (just asthetics)
+            }
+            if (!waitAIPlay) {
+                isWaitingAIPlay = false; //check with bruno some stuff
+                bool smartPlay = CheckDifficulty();
+                MakePlayAI(smartPlay);  //decide if AI gonna play smart or Dumb
+            }
         }
 
+    }
+    /*
+    private IEnumerator WaitForSong() {
+        
+        yield return new WaitForSeconds(0.5f);
+        ChangeAudio(1);
+    }
+    */
+    private IEnumerator WaitForAIPlay() {
+        waitAIPlay = true;
+        isWaitingAIPlay = true;
+        yield return new WaitForSeconds(0.5f);
+        waitAIPlay = false;
+        print("GotHere");
     }
 
     private void MakePlayAI(bool smartPlay) {
@@ -139,11 +168,13 @@ public class Board : MonoBehaviour
 
             Debug.Log("AI Won!");
             endGame = true;
+            ChangeAudio(1);
             GetComponentInChildren<CanvasProcess>().thatsAllFolks(endGame);
         }
         else if (!CheckWinInt(positions[Position.lastPos].PieceType, tabuleiro) && CheckBoardFullInt(tabuleiro)) {
             Debug.Log("Deu Velha");
             endGame = true;
+            ChangeAudio(1);
             GetComponentInChildren<CanvasProcess>().thatsAllFolks(endGame);
         }
 
@@ -181,6 +212,7 @@ public class Board : MonoBehaviour
         else {
             Instantiate(oObject, piecePos, Quaternion.identity, parentPiece);//Run MinMax Algorithm and place the piece in the best place
         }
+        audio.Play();
 
     }
 
@@ -536,4 +568,9 @@ public class Board : MonoBehaviour
 
     }
 
+    public void ChangeAudio(int i) {
+
+        audio.clip = clips[i];
+
+    }
 }
