@@ -1,3 +1,4 @@
+
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,21 +19,7 @@ public class Position : MonoBehaviour
         isOccupied = false;
         PieceType = -1;
     }
-    /*
-    void Update() {
-        if (Input.GetMouseButtonDown(0)) {
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            if (Physics.Raycast(ray, out hit)) {
-                Transform objectHit = hit.transform;
-                if (objectHit == transform) {
-                    CheckClick();
-                }
-            }
-        }
-    }
-    */
     public void SetBoardLocation (int value){
         boardLocation = value;
     }
@@ -58,3 +45,4 @@ public class Position : MonoBehaviour
     }
 
 }
+
