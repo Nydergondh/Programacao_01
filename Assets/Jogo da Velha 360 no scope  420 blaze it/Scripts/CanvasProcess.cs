@@ -62,7 +62,6 @@ public class CanvasProcess : MonoBehaviour {
     }
 
     public void OnChangeScreen(int change) {
-
         canvas.planeDistance = change;
     }
 

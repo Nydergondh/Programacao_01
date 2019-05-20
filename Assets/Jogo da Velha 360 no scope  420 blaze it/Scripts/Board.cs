@@ -6,12 +6,15 @@ using UnityEngine;
 public class Board : MonoBehaviour
 {
 
+    public static Board instance = null;
+
     List<Position> positions;
 
     [SerializeField] GameObject xObject = null;
     [SerializeField] GameObject oObject = null;
     [SerializeField] Transform parentPiece = null;
 
+    public Canvas canvas = null;
     public AudioSource audio = null;
     public AudioClip[] clips;
 
@@ -28,6 +31,14 @@ public class Board : MonoBehaviour
     public OnPieceSpawned onPieceSpawned;
 
     void Awake() {
+        if (instance == null) {
+            instance = this;
+        }
+
+        else if (instance != this) {
+            Destroy(gameObject);
+        }
+
         difficulty = 3;
         positions = new List<Position>();
 
@@ -60,44 +71,20 @@ public class Board : MonoBehaviour
     {
         if (pieceSpawned && !endGame && isPlayerTurn) {
 
-            foreach (Position pos in positions) {
-                int[] tabuleiro = CheckEmptyPos();
-                if (Position.lastPos == pos.GetBoardLocation()) {
-
-                    PutPiece(positions[Position.lastPos].transform.position);
-                    //set both the virtual board and the true board to spawn a player piece in the position clicked
-                    positions[Position.lastPos].PieceType = 1;
-                    tabuleiro[Position.lastPos] = 1;
-
-                    if (CheckWinInt(positions[Position.lastPos].PieceType, tabuleiro)) { //check if the player has won
-
-                        Debug.Log("Player Won!");
-                        endGame = true;
-                        
-                        ChangeAudio(1);
-                        GetComponentInChildren<CanvasProcess>().thatsAllFolks(endGame);
-                    }
-                    else if (!CheckWinInt(positions[Position.lastPos].PieceType, tabuleiro) && CheckBoardFullInt(tabuleiro)) {
-                        Debug.Log("Deu Velha");
-                        ChangeAudio(1);
-                        endGame = true;
-                        GetComponentInChildren<CanvasProcess>().thatsAllFolks(endGame);
-                    }
-
-                    break;//stops the loop for going further in case alredy found where the piece has spawned
-
-                }
-
-            }
-            isPlayerTurn = !isPlayerTurn;
+            int pieceType = 1;
+            bestPlay = Position.lastPos;
+            int[] tabuleiro = CheckEmptyPos();
+            PlayInPosition(tabuleiro, pieceType);
+            
         }
 
-
-        // make AI play
+        //TODO CHECK THIS COUROTINE
         else if (!isPlayerTurn && !endGame) {
+
             if (!waitAIPlay && !isWaitingAIPlay) {
                 StartCoroutine( WaitForAIPlay()); //wait some time to make AI play (just asthetics)
             }
+
             if (!waitAIPlay) {
                 isWaitingAIPlay = false; //check with bruno some stuff
                 bool smartPlay = CheckDifficulty();
@@ -123,65 +110,80 @@ public class Board : MonoBehaviour
 
     private void MakePlayAI(bool smartPlay) {
 
+        int pieceType = 2; // set the piece type to the AI piece type
+
         //JOGADA INTELIGENTE
         if (smartPlay) {
             print("Jogada Inteligente!");
             //faz um tabuleiro virtual para rodar os testes
             int[] tabuleiro = CheckEmptyPos();
             // faz coisas pra desobrir onde jogar
-            MinMax(tabuleiro, isPlayerTurn); //TODO não sei porque funciona PERGUNTAR
-                                             // mark as occupied
-            PlayInPosition(tabuleiro);
+            MinMax(tabuleiro, isPlayerTurn); 
+            PlayInPosition(tabuleiro, pieceType);
         }
 
         //JOGADA BURRA
         else {
             int[] tabuleiro = CheckEmptyPos();
-            //faz um tabuleiro virtual para rodar os         
+            //faz um tabuleiro virtual para rodar os testes     
 
             int[] freePositions = EmptyPositions(tabuleiro);
             print("Jogada Burra!");
             bestPlay = freePositions[Random.Range(0, freePositions.Length)];
 
-            PlayInPosition(tabuleiro);
+            PlayInPosition(tabuleiro, pieceType);
         }
 
     }
 
-    private void PlayInPosition(int[] tabuleiro) {
+    private void PlayInPosition(int[] tabuleiro, int pieceType) {
+
         foreach (Position pos in positions) {
 
             if (bestPlay == pos.GetBoardLocation()) {
                 pos.IsOccupied = true;
-                pos.PieceType = 2;
-                tabuleiro[bestPlay] = 2;
+                pos.PieceType = pieceType;
+                tabuleiro[bestPlay] = pieceType;
                 break;
             }
         }
-        //set last pos to best position indentified by minmax
+
         Position.lastPos = bestPlay;
 
         //Spawns new piece and update the variables to make the player play the game
         PutPiece(positions[Position.lastPos].transform.position);
 
-        if (CheckWinInt(positions[Position.lastPos].PieceType, tabuleiro)) { //check if the player has won
+        if (CheckWinInt(positions[Position.lastPos].PieceType, tabuleiro) && pieceType == 2) { //check if the player has won
 
             Debug.Log("AI Won!");
             endGame = true;
             ChangeAudio(1);
-            GetComponentInChildren<CanvasProcess>().thatsAllFolks(endGame);
+            canvas.GetComponent<CanvasProcess>().thatsAllFolks(endGame);
         }
+
+        else if (CheckWinInt(positions[Position.lastPos].PieceType, tabuleiro) && pieceType == 1) {
+            Debug.Log("Player Won");
+            endGame = true;
+            ChangeAudio(1);
+            canvas.GetComponent<CanvasProcess>().thatsAllFolks(endGame);
+        }
+
+
         else if (!CheckWinInt(positions[Position.lastPos].PieceType, tabuleiro) && CheckBoardFullInt(tabuleiro)) {
             Debug.Log("Deu Velha");
             endGame = true;
             ChangeAudio(1);
-            GetComponentInChildren<CanvasProcess>().thatsAllFolks(endGame);
+            canvas.GetComponent<CanvasProcess>().thatsAllFolks(endGame);
         }
 
-        PieceSpawned();
+        //check if is player turn to change spawned piece (function that controls when to wait for player interaction)
+        if (pieceType == 1) {
+            pieceSpawned = !pieceSpawned;
+        }
         isPlayerTurn = !isPlayerTurn;
+
     }
-    //Returns the number of 
+
     private int[] EmptyPositions(int[] tabuleiro) {
 
         int i = 0;
@@ -217,7 +219,9 @@ public class Board : MonoBehaviour
     }
 
     void PieceSpawned() {
-        pieceSpawned = !pieceSpawned;
+        if (isPlayerTurn) {
+            pieceSpawned = !pieceSpawned;
+        }        
     }
 
     private int[] CheckEmptyPos()
@@ -248,7 +252,6 @@ public class Board : MonoBehaviour
 
         int score;
         int pieceT;
-
         
         pieceT = playerTurn == true ? 2 : 1; //Pog U  :O    TODO perguntar porque.
 
