@@ -21,7 +21,7 @@ public class Board : MonoBehaviour
     public bool isPlayerTurn;
     public bool pieceSpawned;
     public bool endGame;
-    private bool isWaitingAIPlay;
+
     private bool waitAIPlay;
 
     int bestPlay; //saves the IA best play at minimax
@@ -44,7 +44,6 @@ public class Board : MonoBehaviour
 
         pieceSpawned = false;
         waitAIPlay = false;
-        isWaitingAIPlay = false;
         isPlayerTurn = true;
 
         endGame = false;
@@ -77,35 +76,23 @@ public class Board : MonoBehaviour
             PlayInPosition(tabuleiro, pieceType);
             
         }
-
         //TODO CHECK THIS COUROTINE
+
         else if (!isPlayerTurn && !endGame) {
 
-            if (!waitAIPlay && !isWaitingAIPlay) {
-                StartCoroutine( WaitForAIPlay()); //wait some time to make AI play (just asthetics)
-            }
-
+            bool smartPlay = CheckDifficulty();  // check if the AI gonna play smart or Dumb
             if (!waitAIPlay) {
-                isWaitingAIPlay = false; //check with bruno some stuff
-                bool smartPlay = CheckDifficulty();
-                MakePlayAI(smartPlay);  //decide if AI gonna play smart or Dumb
-            }
+                waitAIPlay = true;
+                StartCoroutine(WaitForAIPlay(smartPlay));
+            } 
         }
 
     }
-    /*
-    private IEnumerator WaitForSong() {
-        
-        yield return new WaitForSeconds(0.5f);
-        ChangeAudio(1);
-    }
-    */
-    private IEnumerator WaitForAIPlay() {
-        waitAIPlay = true;
-        isWaitingAIPlay = true;
+
+    private IEnumerator WaitForAIPlay(bool smartP) {
         yield return new WaitForSeconds(0.5f);
         waitAIPlay = false;
-        print("GotHere");
+        MakePlayAI(smartP);
     }
 
     private void MakePlayAI(bool smartPlay) {
@@ -114,7 +101,6 @@ public class Board : MonoBehaviour
 
         //JOGADA INTELIGENTE
         if (smartPlay) {
-            print("Jogada Inteligente!");
             //faz um tabuleiro virtual para rodar os testes
             int[] tabuleiro = CheckEmptyPos();
             // faz coisas pra desobrir onde jogar
@@ -128,7 +114,6 @@ public class Board : MonoBehaviour
             //faz um tabuleiro virtual para rodar os testes     
 
             int[] freePositions = EmptyPositions(tabuleiro);
-            print("Jogada Burra!");
             bestPlay = freePositions[Random.Range(0, freePositions.Length)];
 
             PlayInPosition(tabuleiro, pieceType);

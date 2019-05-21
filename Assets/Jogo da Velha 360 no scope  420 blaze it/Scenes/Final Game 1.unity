@@ -487,6 +487,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas
       objectReference: {fileID: 0}
+    - target: {fileID: 3433372119757292511, guid: 4da21234387889c41be26419c74eccf3,
+        type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 534669904}
     - target: {fileID: 3433372119757292510, guid: 4da21234387889c41be26419c74eccf3,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -592,11 +597,6 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3433372119757292511, guid: 4da21234387889c41be26419c74eccf3,
-        type: 3}
-      propertyPath: m_Camera
-      value: 
-      objectReference: {fileID: 534669904}
     - target: {fileID: 3433372119757292506, guid: 4da21234387889c41be26419c74eccf3,
         type: 3}
       propertyPath: music
@@ -642,6 +642,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 9110065605122462181}
+    - target: {fileID: 3433372119714024623, guid: 4da21234387889c41be26419c74eccf3,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4da21234387889c41be26419c74eccf3, type: 3}
 --- !u!1001 &8852044615034017152
