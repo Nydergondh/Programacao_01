@@ -18,6 +18,7 @@ public class Board : MonoBehaviour
     public AudioSource audio = null;
     public AudioClip[] clips;
 
+    public bool isMultiplayer;
     public bool isPlayerTurn;
     public bool pieceSpawned;
     public bool endGame;
@@ -26,6 +27,7 @@ public class Board : MonoBehaviour
 
     int bestPlay; //saves the IA best play at minimax
     int difficulty;
+    int currentPlayer = 1;
 
     public delegate void OnPieceSpawned();
     public OnPieceSpawned onPieceSpawned;
@@ -42,6 +44,7 @@ public class Board : MonoBehaviour
         difficulty = 3;
         positions = new List<Position>();
 
+        isMultiplayer = false;
         pieceSpawned = false;
         waitAIPlay = false;
         isPlayerTurn = true;
@@ -68,23 +71,43 @@ public class Board : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (pieceSpawned && !endGame && isPlayerTurn) {
+        if (!isMultiplayer) {
 
-            int pieceType = 1;
-            bestPlay = Position.lastPos;
-            int[] tabuleiro = CheckEmptyPos();
-            PlayInPosition(tabuleiro, pieceType);
-            
+
+            if (pieceSpawned && !endGame && isPlayerTurn) {
+
+                int pieceType = 1;
+                bestPlay = Position.lastPos;
+                int[] tabuleiro = CheckEmptyPos();
+                PlayInPosition(tabuleiro, pieceType);
+
+            }
+            //TODO CHECK THIS COUROTINE
+
+            else if (!isPlayerTurn && !endGame) {
+
+                bool smartPlay = CheckDifficulty();  // check if the AI gonna play smart or Dumb
+                if (!waitAIPlay) {
+                    waitAIPlay = true;
+                    StartCoroutine(WaitForAIPlay(smartPlay));
+                }
+            }
         }
-        //TODO CHECK THIS COUROTINE
+        else {
 
-        else if (!isPlayerTurn && !endGame) {
+            if (pieceSpawned && !endGame && currentPlayer == 1) {
 
-            bool smartPlay = CheckDifficulty();  // check if the AI gonna play smart or Dumb
-            if (!waitAIPlay) {
-                waitAIPlay = true;
-                StartCoroutine(WaitForAIPlay(smartPlay));
-            } 
+                int pieceType = 1;
+                int[] tabuleiro = CheckEmptyPos();
+                PlayInPosition(tabuleiro, currentPlayer);
+
+            }
+            else if(pieceSpawned && !endGame && currentPlayer == 2) {
+                int pieceType = 1;
+                int[] tabuleiro = CheckEmptyPos();
+                PlayInPosition(tabuleiro, currentPlayer);
+            }
+            
         }
 
     }
