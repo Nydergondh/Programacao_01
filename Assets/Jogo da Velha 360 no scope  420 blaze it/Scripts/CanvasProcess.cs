@@ -70,4 +70,8 @@ public class CanvasProcess : MonoBehaviour {
         frame.SetBool("Menu",value);
         text.SetBool("Menu", value);
     }
+
+    public void LocalGameStart(bool value) {
+        Board.instance.isMultiplayer = true;
+    }
 }

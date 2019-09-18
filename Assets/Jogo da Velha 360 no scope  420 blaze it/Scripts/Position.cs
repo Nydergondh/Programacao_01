@@ -35,12 +35,20 @@ public class Position : MonoBehaviour
     //TODO Perguntar para o bruno porque da pau aos diversos cliques.
     void OnMouseDown() {
         if (!mainMenu.activeSelf && !difficultyMenu.activeSelf) {
-            if (!isOccupied && Board.instance.isPlayerTurn) {
+            if (!isOccupied && Board.instance.isPlayerTurn && !Board.instance.isMultiplayer) {
                 isOccupied = true;
                 lastPos = boardLocation;
                 GetComponentInParent<Board>().onPieceSpawned();
             }
+
+            else if (!isOccupied && Board.instance.isMultiplayer) {
+                isOccupied = true;
+                lastPos = boardLocation;
+                GetComponentInParent<Board>().onPieceSpawned();
+                print(boardLocation);
+            }
         }
+
     }
 
 }

@@ -69,10 +69,12 @@ public class Board : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        if (!isMultiplayer) {
+    void Update() {
+        GameLoop();
+    }
 
+    private void GameLoop() {
+        if (!isMultiplayer) {
 
             if (pieceSpawned && !endGame && isPlayerTurn) {
 
@@ -96,20 +98,19 @@ public class Board : MonoBehaviour
         else {
 
             if (pieceSpawned && !endGame && currentPlayer == 1) {
-
-                int pieceType = 1;
-                int[] tabuleiro = CheckEmptyPos();
-                PlayInPosition(tabuleiro, currentPlayer);
-
-            }
-            else if(pieceSpawned && !endGame && currentPlayer == 2) {
+                bestPlay = Position.lastPos;
                 int pieceType = 1;
                 int[] tabuleiro = CheckEmptyPos();
                 PlayInPosition(tabuleiro, currentPlayer);
             }
-            
+            else if (pieceSpawned && !endGame && currentPlayer == 2) {
+                bestPlay = Position.lastPos;
+                int pieceType = 2;
+                int[] tabuleiro = CheckEmptyPos();
+                PlayInPosition(tabuleiro, currentPlayer);
+            }
+
         }
-
     }
 
     private IEnumerator WaitForAIPlay(bool smartP) {
@@ -185,10 +186,25 @@ public class Board : MonoBehaviour
         }
 
         //check if is player turn to change spawned piece (function that controls when to wait for player interaction)
-        if (pieceType == 1) {
+        if (isPlayerTurn && !isMultiplayer) {
             pieceSpawned = !pieceSpawned;
         }
-        isPlayerTurn = !isPlayerTurn;
+        //if is multiplayer wait for the other player to make a play and spawn a piece
+        //if current player is 1 (X) then change it to 2 (O) and vice versa
+        else if(isMultiplayer) {
+            pieceSpawned = !pieceSpawned;
+            if (currentPlayer == 1) {
+                currentPlayer = 2;
+            }
+            else {
+                currentPlayer = 1;
+            }
+        }
+        //if is not multiplayer then change the turn to the IA or the players
+        if (!isMultiplayer) {
+            isPlayerTurn = !isPlayerTurn;
+        }
+
 
     }
 
@@ -216,20 +232,34 @@ public class Board : MonoBehaviour
 
     void PutPiece(Vector3 piecePos) {
 
-        if (isPlayerTurn) {
-            Instantiate(xObject, piecePos, Quaternion.identity, parentPiece);
+        if (!isMultiplayer) {
+            if (isPlayerTurn) {
+                Instantiate(xObject, piecePos, Quaternion.identity, parentPiece);
+            }
+            else {
+                Instantiate(oObject, piecePos, Quaternion.identity, parentPiece);//Run MinMax Algorithm and place the piece in the best place
+            }
         }
         else {
-            Instantiate(oObject, piecePos, Quaternion.identity, parentPiece);//Run MinMax Algorithm and place the piece in the best place
+            if (currentPlayer == 1) {
+                Instantiate(xObject, piecePos, Quaternion.identity, parentPiece);
+            }
+            else if(currentPlayer == 2) {
+                Instantiate(oObject, piecePos, Quaternion.identity, parentPiece);//Run MinMax Algorithm and place the piece in the best place
+            }
         }
         audio.Play();
 
     }
 
     void PieceSpawned() {
-        if (isPlayerTurn) {
+        //if not multiplayer then wait for IA play
+        if (isPlayerTurn && !isMultiplayer) {
             pieceSpawned = !pieceSpawned;
-        }        
+        }
+        else if (isMultiplayer) {
+            pieceSpawned = !pieceSpawned;
+        }
     }
 
     private int[] CheckEmptyPos()
@@ -520,6 +550,10 @@ public class Board : MonoBehaviour
     }
     //destroy all the elments in the board and reset the positions attributes
     public void ResetStuff() {
+        // multiplayer resets
+        isMultiplayer = false;
+        currentPlayer = 1;
+        //SinglePlayer resets
         isPlayerTurn = true;
         endGame = false;
         foreach (Position pos in positions) {
@@ -528,6 +562,7 @@ public class Board : MonoBehaviour
         }
 
         Position.lastPos = -1;
+        pieceSpawned = false;
 
         foreach (Transform ts in parentPiece) {
             GameObject obj = ts.gameObject;
