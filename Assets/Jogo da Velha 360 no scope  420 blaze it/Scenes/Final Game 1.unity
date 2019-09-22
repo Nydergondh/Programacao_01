@@ -463,12 +463,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &2066782080 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2066782080, guid: 4da21234387889c41be26419c74eccf3,
-    type: 3}
-  m_PrefabInstance: {fileID: 3945650097338412739}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1825187212782811804 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3428820148957893727, guid: 4da21234387889c41be26419c74eccf3,
@@ -648,16 +642,6 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 9110065605122462181}
-    - target: {fileID: 3285716758576780864, guid: 4da21234387889c41be26419c74eccf3,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
-      value: 
-      objectReference: {fileID: 2066782080}
-    - target: {fileID: 3285716758576780864, guid: 4da21234387889c41be26419c74eccf3,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
-      value: SetActive
-      objectReference: {fileID: 0}
     - target: {fileID: 612874315, guid: 4da21234387889c41be26419c74eccf3, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[3].m_Target
       value: 
@@ -737,19 +721,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 339375034866271333, guid: 7355359ec044ca54294531a9149579f7,
         type: 3}
-      propertyPath: audio
-      value: 
-      objectReference: {fileID: 1688969141}
-    - target: {fileID: 339375034866271333, guid: 7355359ec044ca54294531a9149579f7,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 339375034866271333, guid: 7355359ec044ca54294531a9149579f7,
-        type: 3}
       propertyPath: canvas
       value: 
       objectReference: {fileID: 1829598460774083868}
+    - target: {fileID: 339375034866271333, guid: 7355359ec044ca54294531a9149579f7,
+        type: 3}
+      propertyPath: audio
+      value: 
+      objectReference: {fileID: 1688969141}
     - target: {fileID: 1535289135360997928, guid: 7355359ec044ca54294531a9149579f7,
         type: 3}
       propertyPath: mainMenu

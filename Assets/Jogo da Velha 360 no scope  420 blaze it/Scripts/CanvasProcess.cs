@@ -7,8 +7,11 @@ using UnityEngine.UI;
 public class CanvasProcess : MonoBehaviour {
 
     public bool taf = false;
+    public static CanvasProcess instance = null;
 
     private Canvas canvas;
+
+    public GameObject MultiuplayerMenu;
 
     public GameObject endingButton;
     public Animator frame = null;
@@ -21,6 +24,14 @@ public class CanvasProcess : MonoBehaviour {
 
     // Start is called before the first frame update
     void Awake() {
+
+        if (instance == null) {
+            instance = this;
+        }
+        else {
+            Destroy(instance);
+            instance = this;
+        }
         canvas = GetComponent<Canvas>();    
     }
 
@@ -74,4 +85,10 @@ public class CanvasProcess : MonoBehaviour {
     public void LocalGameStart(bool value) {
         Board.instance.isMultiplayer = true;
     }
+
+    public bool GetMultiplayerMenu() {
+        return MultiuplayerMenu.activeSelf;
+    }
+
+    
 }

@@ -1508,10 +1508,12 @@ MonoBehaviour:
   xObject: {fileID: 1694854951936053830, guid: c99ab8a9f634cab45bec046aced88b43, type: 3}
   oObject: {fileID: 4921186710130134775, guid: cca0c716c2c8dd44aa24659fa4c126a2, type: 3}
   parentPiece: {fileID: 6960263608411634298}
+  canvas: {fileID: 0}
   audio: {fileID: 0}
   clips:
   - {fileID: 8300000, guid: 621306472b92dc8458d1a8fcf8450b25, type: 3}
   - {fileID: 8300000, guid: 0881ddfe849fa6845ab96aff488a631e, type: 3}
+  isMultiplayer: 0
   isPlayerTurn: 0
   pieceSpawned: 0
   endGame: 0
