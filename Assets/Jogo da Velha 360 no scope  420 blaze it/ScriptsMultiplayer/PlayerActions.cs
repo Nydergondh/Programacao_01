@@ -1,13 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Networking;
 using UnityEngine;
 
-public class PlayerActions : MonoBehaviour
-{
+public class PlayerActions : NetworkBehaviour {
     public LayerMask layer;
     private float rayDistance = 50;
     private PositionsMultiPlayer pos = null;
     public int playerID;
+
+    void Start() {
+
+    }
 
     void Update() {
 

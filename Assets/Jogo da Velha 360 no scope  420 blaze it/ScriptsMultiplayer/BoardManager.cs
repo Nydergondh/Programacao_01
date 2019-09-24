@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Networking;
 using UnityEngine;
 
-public class BoardManager : MonoBehaviour
-{
+public class BoardManager : NetworkBehaviour {
 
+    public static List<PlayerActions> players;
     public static BoardManager instance = null;
 
     List<PositionsMultiPlayer> positions;
@@ -34,6 +35,7 @@ public class BoardManager : MonoBehaviour
             Destroy(gameObject);
         }
 
+        players = new List<PlayerActions>();
         positions = new List<PositionsMultiPlayer>();
 
         pieceSpawned = false;
@@ -322,8 +324,7 @@ public class BoardManager : MonoBehaviour
     }
 
     public void ChangeAudio(int i) {
-
         audio.clip = clips[i];
-
     }
+
 }
