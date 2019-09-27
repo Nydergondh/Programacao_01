@@ -45,6 +45,7 @@ public class LocalGamesView : MonoBehaviour {
         MyNetworkManager.Discovery.Initialize();
 
         // Pede para o NetworkDiscovery começar a ouvir pacotes de broadcast.
+        NetworkServer.Reset();
         MyNetworkManager.Discovery.StartAsClient();
 
         // Cria um botão para cada uma das partidas suportadas.
@@ -66,6 +67,8 @@ public class LocalGamesView : MonoBehaviour {
         // Assina o evento do NetworkManager que nos avisa sempre que
         // um client se conectar.
         MyNetworkManager.onServerConnect += onServerConnect;
+        //TODO Adicionado por mim (Vinicius) perguntar se necessário
+        MyNetworkManager.onClientConnect += onClientConnect;
     }
 
     /*
@@ -100,15 +103,35 @@ public class LocalGamesView : MonoBehaviour {
     }
 
     // Chamada pelo NetworkManager quando um cliente conecta, através da assinatura feita no Start().
-    private void onServerConnect(NetworkConnection conn)
+    public void onServerConnect(NetworkConnection conn)
     {
         // Atualiza o estado da UI para "in game".
         WaitingForPlayersRoot.SetActive(false);
 
+        //TODO adicionar algo para começar o jogo realmente (Ligar o Board ETC...)
+        // Neste momento seria enviado alguma mensagem de "iniciar partida",
+        // carregamento de cena de gameplay etc.
+
+        //adjusting the screen to the game
+        CanvasProcess.instance.SetMenuBool(false);
+        CanvasProcess.instance.MultiuplayerMenu.SetActive(false);
+        CanvasProcess.instance.OnChangeScreen(10);
+
+        CanvasProcess.instance.StartGame();
+    }
+
+    //TODO questionar se necessário
+    public void onClientConnect(NetworkConnection conn) {
+        print("GotHere");
+        // Atualiza o estado da UI para "in game".
+        WaitingForPlayersRoot.SetActive(false);
 
         //TODO adicionar algo para começar o jogo realmente (Ligar o Board ETC...)
         // Neste momento seria enviado alguma mensagem de "iniciar partida",
         // carregamento de cena de gameplay etc.
+
+        //adjust the screen to the game
+        CanvasProcess.instance.StartGame();
     }
 
     /*

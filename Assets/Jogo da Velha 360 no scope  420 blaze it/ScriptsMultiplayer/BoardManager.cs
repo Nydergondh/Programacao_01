@@ -7,8 +7,9 @@ public class BoardManager : NetworkBehaviour {
 
     public static List<PlayerActions> players;
     public static BoardManager instance = null;
+    public static int lastPos = -1;
 
-    List<PositionsMultiPlayer> positions;
+    public List<PositionsMultiPlayer> positions;
 
     [SerializeField] GameObject xObject = null;
     [SerializeField] GameObject oObject = null;
@@ -42,7 +43,7 @@ public class BoardManager : NetworkBehaviour {
 
         endGame = false;
         onPieceSpawned += PieceSpawned;
-
+        print("Awkend");
     }
 
 
@@ -58,42 +59,54 @@ public class BoardManager : NetworkBehaviour {
 
     }
 
-    // Update is called once per frame
-    void Update() {
-        GameLoop();
+    public void Inicialize() {
+        gameObject.SetActive(true);
     }
 
-    private void GameLoop() {      
+    // Update is called once per frame
+    void Update() {
 
-            if (pieceSpawned && !endGame && currentPlayer == 1) {
-                int pieceType = 1;
-                int[] tabuleiro = CheckEmptyPos();
-                PlayInPosition(tabuleiro, currentPlayer);
-            }
-            else if (pieceSpawned && !endGame && currentPlayer == 2) {
-                int pieceType = 2;
-                int[] tabuleiro = CheckEmptyPos();
-                PlayInPosition(tabuleiro, currentPlayer);
-            }
+        GameLoop();
         
     }
 
-    private void PlayInPosition(int[] tabuleiro, int pieceType) {
+    private void GameLoop() {
+
+        if (pieceSpawned && !endGame) {
+            int[] tabuleiro = CheckEmptyPos();
+            CmdPlayInPosition(tabuleiro, currentPlayer);
+        }
+            /*
+            }
+            else if (pieceSpawned && !endGame && currentPlayer == 2) {
+                int[] tabuleiro = CheckEmptyPos();
+                RpcPlayInPosition(tabuleiro, currentPlayer);
+            }
+            */       
+    }
+
+    [Command]
+    private void CmdPlayInPosition(int[] tabuleiro, int pieceType) {
+        RpcPlayInPosition(tabuleiro,pieceType);
+    }
+
+    [ClientRpc]
+    private void RpcPlayInPosition(int[] tabuleiro, int pieceType) {
 
         foreach (PositionsMultiPlayer pos in positions) {
             //check what Position was clicked to Put a Piece on it
-            if (PositionsMultiPlayer.lastPos == pos.GetBoardLocation()) {
+            if (lastPos == pos.boardLocation) {
                 pos.IsOccupied = true;
                 pos.PieceType = pieceType;
-                tabuleiro[PositionsMultiPlayer.lastPos] = pieceType;
+                tabuleiro[lastPos] = pieceType;
                 break;
             }
         }
 
         //Spawns new piece and update the variables to make the player play the game
-        PutPiece(positions[PositionsMultiPlayer.lastPos].transform.position);
+        PutPiece(positions[lastPos].transform.position);
 
-        if (CheckWinInt(positions[PositionsMultiPlayer.lastPos].PieceType, tabuleiro) && pieceType == 2) { //check if the player has won
+        if (CheckWinInt(positions[lastPos].PieceType, tabuleiro) && pieceType == 2) { //check if the player has won
 
             Debug.Log("Player 2 has Won");
             endGame = true;
@@ -101,7 +114,7 @@ public class BoardManager : NetworkBehaviour {
             canvas.GetComponent<CanvasProcess>().thatsAllFolks(endGame);
         }
 
-        else if (CheckWinInt(positions[PositionsMultiPlayer.lastPos].PieceType, tabuleiro) && pieceType == 1) {
+        else if (CheckWinInt(positions[lastPos].PieceType, tabuleiro) && pieceType == 1) {
             Debug.Log("Player 1 has Won");
             endGame = true;
             ChangeAudio(1);
@@ -109,7 +122,7 @@ public class BoardManager : NetworkBehaviour {
         }
 
 
-        else if (!CheckWinInt(positions[PositionsMultiPlayer.lastPos].PieceType, tabuleiro) && CheckBoardFullInt(tabuleiro)) {
+        else if (!CheckWinInt(positions[lastPos].PieceType, tabuleiro) && CheckBoardFullInt(tabuleiro)) {
             Debug.Log("Deu Velha");
             endGame = true;
             ChangeAudio(1);
@@ -313,7 +326,7 @@ public class BoardManager : NetworkBehaviour {
             pos.IsOccupied = false;
         }
 
-        PositionsMultiPlayer.lastPos = -1;
+        lastPos = -1;
         pieceSpawned = false;
 
         foreach (Transform ts in parentPiece) {

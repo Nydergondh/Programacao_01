@@ -50,8 +50,9 @@ public class MyNetworkManager : NetworkManager
         }
 
         Debug.Log("Connected to server! Address: " + conn.address);
-
+        print(conn.connectionId);
         onClientConnect?.Invoke(conn);
+
     }
 
     public override void OnClientError(NetworkConnection conn, int errorCode)

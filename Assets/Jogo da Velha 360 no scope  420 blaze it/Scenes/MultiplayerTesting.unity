@@ -633,7 +633,7 @@ GameObject:
   - component: {fileID: 316293185}
   - component: {fileID: 316293186}
   m_Layer: 0
-  m_Name: NetworkManagerSwag
+  m_Name: NetworkManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -665,7 +665,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a30a98317f57ff4c98a12d48bc8470f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_NetworkPort: 30123
+  m_NetworkPort: 7777
   m_ServerBindToIP: 0
   m_ServerBindAddress: 
   m_NetworkAddress: whatever
@@ -680,7 +680,9 @@ MonoBehaviour:
   m_PlayerSpawnMethod: 0
   m_OfflineScene: 
   m_OnlineScene: 
-  m_SpawnPrefabs: []
+  m_SpawnPrefabs:
+  - {fileID: 1694854951936053830, guid: c99ab8a9f634cab45bec046aced88b43, type: 3}
+  - {fileID: 4921186710130134775, guid: cca0c716c2c8dd44aa24659fa4c126a2, type: 3}
   m_CustomConfig: 0
   m_MaxConnections: 4
   m_ConnectionConfig:
@@ -2644,7 +2646,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   taf: 0
-  MultiuplayerMenu: {fileID: 2025864440}
+  Image: {fileID: 1419677900}
+  MultiuplayerMenu: {fileID: 2116174715}
   endingButton: {fileID: 781905280}
   frame: {fileID: 502840286}
   text: {fileID: 1285795330}
@@ -4438,6 +4441,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1698682954}
   - component: {fileID: 1698682953}
+  - component: {fileID: 1698682955}
   m_Layer: 0
   m_Name: Board
   m_TagString: Untagged
@@ -4484,6 +4488,39 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1698682955
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1698682952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 0
+    i1: 0
+    i2: 0
+    i3: 0
+    i4: 0
+    i5: 0
+    i6: 0
+    i7: 0
+    i8: 0
+    i9: 0
+    i10: 0
+    i11: 0
+    i12: 0
+    i13: 0
+    i14: 0
+    i15: 0
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 1
 --- !u!1 &1769456488
 GameObject:
   m_ObjectHideFlags: 0

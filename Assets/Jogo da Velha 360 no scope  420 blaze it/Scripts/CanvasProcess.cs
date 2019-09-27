@@ -9,8 +9,7 @@ public class CanvasProcess : MonoBehaviour {
     public bool taf = false;
     public static CanvasProcess instance = null;
 
-    private Canvas canvas;
-
+    public GameObject Image;
     public GameObject MultiuplayerMenu;
 
     public GameObject endingButton;
@@ -32,7 +31,6 @@ public class CanvasProcess : MonoBehaviour {
             Destroy(instance);
             instance = this;
         }
-        canvas = GetComponent<Canvas>();    
     }
 
     void Start()
@@ -74,20 +72,30 @@ public class CanvasProcess : MonoBehaviour {
     }
 
     public void OnChangeScreen(int change) {
+        Canvas canvas = instance.GetComponent<Canvas>();
         canvas.planeDistance = change;
     }
 
     public void SetMenuBool(bool value) {
+
         frame.SetBool("Menu",value);
         text.SetBool("Menu", value);
-    }
 
-    public void LocalGameStart(bool value) {
-        Board.instance.isMultiplayer = true;
     }
 
     public bool GetMultiplayerMenu() {
         return MultiuplayerMenu.activeSelf;
+    }
+
+    public void StartGame() {
+
+        SetMenuBool(false);
+        MultiuplayerMenu.SetActive(false);
+        Image.SetActive(false);
+        instance.OnChangeScreen(10);
+
+        BoardManager.instance.enabled = true;
+
     }
 
     

@@ -10,10 +10,17 @@ public class PlayerActions : NetworkBehaviour {
     public int playerID;
 
     void Start() {
-
+        if (isLocalPlayer && isServer) {
+            playerID = 1;
+        }
+        else {
+            playerID = 2;
+        }
     }
 
     void Update() {
+
+        if (!isLocalPlayer) return;
 
         if (Input.GetMouseButtonDown(0) && BoardManager.currentPlayer == playerID) {
             RaycastHit hit;
@@ -21,15 +28,43 @@ public class PlayerActions : NetworkBehaviour {
 
             if (Physics.Raycast(ray, out hit, rayDistance ,layer)) {
                 pos = hit.collider.gameObject.GetComponent<PositionsMultiPlayer>();
-                if (!CanvasProcess.instance.GetMultiplayerMenu() && !pos.isOccupied && BoardManager.instance.enabled) {
-                    pos.isOccupied = true;
-                    PositionsMultiPlayer.lastPos = pos.boardLocation;
-                    BoardManager.instance.onPieceSpawned();
-                    print(pos.boardLocation);
+                if (pos != null) {
+                    if (!CanvasProcess.instance.GetMultiplayerMenu() && !pos.isOccupied && BoardManager.instance.enabled) {
+                        //passa o parametro que ocupa a posição e a atualização de qual posição é o last pos
+                        CmdDoMove(pos.boardLocation);
+                    }
+
                 }
             }
         }
         
+    }
+
+    [Command]
+    private void CmdDoMove(int lastP) {
+        RpcDoMove(lastP);
+    }
+
+    [ClientRpc]
+    private void RpcDoMove(int lastP) {
+
+        pos = GetPositionPlayed(lastP);
+        pos.isOccupied = true;
+        BoardManager.lastPos = pos.boardLocation;
+        BoardManager.instance.onPieceSpawned();
+        print(pos.boardLocation);
+    }
+    
+    //Pede para o server replicar o prenchimento da posição e a atualização do lastPos
+    //isso atualiza o ultimo clique valido em uma posição pelo player atual
+
+    private PositionsMultiPlayer GetPositionPlayed(int lastP) {
+        foreach (PositionsMultiPlayer position in BoardManager.instance.positions) {
+            if (position.boardLocation == lastP) {
+                return position;
+            }
+        }
+        return null;
     }
 
 }
