@@ -10,12 +10,9 @@ public class PlayerActions : NetworkBehaviour {
     public int playerID;
 
     void Start() {
-        if (isLocalPlayer && isServer) {
-            playerID = 1;
-        }
-        else {
-            playerID = 2;
-        }
+
+        BoardManager.instance.AddPlayer(this);
+
     }
 
     void Update() {
@@ -52,7 +49,6 @@ public class PlayerActions : NetworkBehaviour {
         pos.isOccupied = true;
         BoardManager.lastPos = pos.boardLocation;
         BoardManager.instance.onPieceSpawned();
-        print(pos.boardLocation);
     }
     
     //Pede para o server replicar o prenchimento da posição e a atualização do lastPos

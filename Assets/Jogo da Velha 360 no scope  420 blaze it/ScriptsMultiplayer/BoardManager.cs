@@ -43,7 +43,6 @@ public class BoardManager : NetworkBehaviour {
 
         endGame = false;
         onPieceSpawned += PieceSpawned;
-        print("Awkend");
     }
 
 
@@ -340,4 +339,8 @@ public class BoardManager : NetworkBehaviour {
         audio.clip = clips[i];
     }
 
+    public void AddPlayer(PlayerActions player) {
+        players.Add(player);
+        player.playerID = players.Count;
+    }
 }
