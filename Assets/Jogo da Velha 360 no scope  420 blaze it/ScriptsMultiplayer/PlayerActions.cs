@@ -49,6 +49,8 @@ public class PlayerActions : NetworkBehaviour {
         pos.isOccupied = true;
         BoardManager.lastPos = pos.boardLocation;
         BoardManager.instance.onPieceSpawned();
+
+        BoardManager.instance.PlayInPosition();
     }
     
     //Pede para o server replicar o prenchimento da posição e a atualização do lastPos

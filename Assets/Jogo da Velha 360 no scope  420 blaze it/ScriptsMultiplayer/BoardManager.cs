@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.Networking;
 using UnityEngine;
 
-public class BoardManager : NetworkBehaviour {
+public class BoardManager : MonoBehaviour {
 
     public static List<PlayerActions> players;
     public static BoardManager instance = null;
@@ -62,42 +62,16 @@ public class BoardManager : NetworkBehaviour {
         gameObject.SetActive(true);
     }
 
-    // Update is called once per frame
-    void Update() {
+    public void PlayInPosition() {
 
-        GameLoop();
-        
-    }
-
-    private void GameLoop() {
-
-        if (pieceSpawned && !endGame) {
-            int[] tabuleiro = CheckEmptyPos();
-            CmdPlayInPosition(tabuleiro, currentPlayer);
-        }
-            /*
-            }
-            else if (pieceSpawned && !endGame && currentPlayer == 2) {
-                int[] tabuleiro = CheckEmptyPos();
-                RpcPlayInPosition(tabuleiro, currentPlayer);
-            }
-            */       
-    }
-
-    [Command]
-    private void CmdPlayInPosition(int[] tabuleiro, int pieceType) {
-        RpcPlayInPosition(tabuleiro,pieceType);
-    }
-
-    [ClientRpc]
-    private void RpcPlayInPosition(int[] tabuleiro, int pieceType) {
+        int[] tabuleiro = CheckEmptyPos();
 
         foreach (PositionsMultiPlayer pos in positions) {
             //check what Position was clicked to Put a Piece on it
             if (lastPos == pos.boardLocation) {
                 pos.IsOccupied = true;
-                pos.PieceType = pieceType;
-                tabuleiro[lastPos] = pieceType;
+                pos.PieceType = currentPlayer;
+                tabuleiro[lastPos] = currentPlayer;
                 break;
             }
         }
@@ -105,7 +79,7 @@ public class BoardManager : NetworkBehaviour {
         //Spawns new piece and update the variables to make the player play the game
         PutPiece(positions[lastPos].transform.position);
 
-        if (CheckWinInt(positions[lastPos].PieceType, tabuleiro) && pieceType == 2) { //check if the player has won
+        if (CheckWinInt(positions[lastPos].PieceType, tabuleiro) && currentPlayer == 2) { //check if the player has won
 
             Debug.Log("Player 2 has Won");
             endGame = true;
@@ -113,7 +87,7 @@ public class BoardManager : NetworkBehaviour {
             canvas.GetComponent<CanvasProcess>().thatsAllFolks(endGame);
         }
 
-        else if (CheckWinInt(positions[lastPos].PieceType, tabuleiro) && pieceType == 1) {
+        else if (CheckWinInt(positions[lastPos].PieceType, tabuleiro) && currentPlayer == 1) {
             Debug.Log("Player 1 has Won");
             endGame = true;
             ChangeAudio(1);

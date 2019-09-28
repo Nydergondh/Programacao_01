@@ -5,7 +5,7 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
+  - enabled: 1
+    path: Assets/Jogo da Velha 360 no scope  420 blaze it/Scenes/MultiplayerTesting.unity
+    guid: 71c6bbf1fd821424088c58676d4f5fea
   m_configObjects: {}
