@@ -11,6 +11,9 @@ public class PlayerActions : NetworkBehaviour {
 
     void Start() {
 
+        MyNetworkManager.onServerDisconnect += OnServerDisconnect;
+        MyNetworkManager.onClientDisconnect += OnClientDisconnect;
+
         BoardManager.instance.AddPlayer(this);
 
     }
@@ -47,6 +50,7 @@ public class PlayerActions : NetworkBehaviour {
 
         pos = GetPositionPlayed(lastP);
         pos.isOccupied = true;
+        pos.PieceType = BoardManager.currentPlayer;
         BoardManager.lastPos = pos.boardLocation;
         BoardManager.instance.onPieceSpawned();
 
@@ -64,5 +68,17 @@ public class PlayerActions : NetworkBehaviour {
         }
         return null;
     }
-
+    
+    //chama no cliente quando ele se desconecta do server
+    public void OnServerDisconnect(NetworkConnection conn) {
+        Destroy(this);
+    }
+    //chama no server quando um cliente disconectar
+    public void OnClientDisconnect(NetworkConnection conn) {
+        if (!isLocalPlayer) {
+            Destroy(this);
+        }
+    }
+    
+    
 }

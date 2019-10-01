@@ -112,11 +112,7 @@ public class LocalGamesView : MonoBehaviour {
         // Neste momento seria enviado alguma mensagem de "iniciar partida",
         // carregamento de cena de gameplay etc.
 
-        //adjusting the screen to the game
-        CanvasProcess.instance.SetMenuBool(false);
-        CanvasProcess.instance.MultiuplayerMenu.SetActive(false);
-        CanvasProcess.instance.OnChangeScreen(10);
-
+        //adjusting the screen to start the game
         CanvasProcess.instance.StartGame();
     }
 
@@ -224,7 +220,6 @@ public class LocalGamesView : MonoBehaviour {
             _currentMatches[i].SetActive(false);
         }
     }
-
 
     // Método auxiliar para comparar 2 arrays de bytes.
     private bool EqualsArray(byte[] left, byte[] right)

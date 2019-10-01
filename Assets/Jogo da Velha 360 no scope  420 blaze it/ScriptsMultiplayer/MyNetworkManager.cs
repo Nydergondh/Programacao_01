@@ -9,8 +9,10 @@ public class MyNetworkManager : NetworkManager
 {
     public static event Action<NetworkConnection> onServerConnect;
     public static event Action<NetworkConnection> onClientConnect;
+    public static event Action<NetworkConnection> onClientDisconnect;
+    public static event Action<NetworkConnection> onServerDisconnect;
 
-    public static NetworkDiscovery Discovery
+    public static NetworkDiscovery Discovery 
     {
         get
         {
@@ -54,9 +56,20 @@ public class MyNetworkManager : NetworkManager
         onClientConnect?.Invoke(conn);
 
     }
+    //dont know if I need this
+    public override void OnClientDisconnect(NetworkConnection conn) {
+        base.OnClientDisconnect(conn);
+        onClientDisconnect?.Invoke(conn);
+    }
+
+    public override void OnServerDisconnect(NetworkConnection conn) {
+        base.OnServerDisconnect(conn);
+        onServerDisconnect?.Invoke(conn);
+    }
 
     public override void OnClientError(NetworkConnection conn, int errorCode)
     {
-        base.OnClientError(conn, errorCode);
+        base.OnClientError(conn, errorCode);      
     }
+
 }

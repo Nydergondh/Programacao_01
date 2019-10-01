@@ -66,15 +66,7 @@ public class BoardManager : MonoBehaviour {
 
         int[] tabuleiro = CheckEmptyPos();
 
-        foreach (PositionsMultiPlayer pos in positions) {
-            //check what Position was clicked to Put a Piece on it
-            if (lastPos == pos.boardLocation) {
-                pos.IsOccupied = true;
-                pos.PieceType = currentPlayer;
-                tabuleiro[lastPos] = currentPlayer;
-                break;
-            }
-        }
+        tabuleiro[lastPos] = currentPlayer;
 
         //Spawns new piece and update the variables to make the player play the game
         PutPiece(positions[lastPos].transform.position);
