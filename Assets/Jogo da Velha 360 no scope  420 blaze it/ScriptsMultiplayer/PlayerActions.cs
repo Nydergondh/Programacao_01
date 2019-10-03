@@ -22,7 +22,7 @@ public class PlayerActions : NetworkBehaviour {
 
         if (!isLocalPlayer) return;
 
-        if (Input.GetMouseButtonDown(0) && BoardManager.currentPlayer == playerID) {
+        if (Input.GetMouseButtonDown(0) && BoardManager.currentPlayer == playerID && !BoardManager.instance.endGame) {
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 

@@ -266,14 +266,6 @@ public class BoardManager : MonoBehaviour {
         return true;
     }
 
-    /*
-    void Calcula(int a, int b, out int x, out int y)    //como funciona os parametros out
-    {
-        x = a + b;
-        y = a * b;
-    }
-    */
-    //todo REMOVE LATER
     public struct Jogada {
         public int[] tabuleiro;
         public int score;
@@ -282,8 +274,9 @@ public class BoardManager : MonoBehaviour {
 
     //destroy all the elments in the board and reset the positions attributes
     public void ResetStuff() {
-        // multiplayer resets
+        //Multiplayer resets
         currentPlayer = 1;
+        players.Clear();
         //SinglePlayer resets
         endGame = false;
         foreach (PositionsMultiPlayer pos in positions) {

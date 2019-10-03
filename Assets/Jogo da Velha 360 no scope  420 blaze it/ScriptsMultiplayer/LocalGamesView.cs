@@ -34,24 +34,27 @@ public class LocalGamesView : MonoBehaviour {
     /*
      * INICIALIZAÇÃO
      */
+    public void Inicialize() {
 
-    private void Start()
-    {
-        // Reinicia o estado da UI para o inicial
+        //DeleteMatches();
+
         ConnectRoot.SetActive(true);
         WaitingForPlayersRoot.SetActive(false);
 
         // Inicializa o NetworkDiscovery.
+
+        if (MyNetworkManager.Discovery.running) {
+            MyNetworkManager.Discovery.StopBroadcast();
+        }
+
         MyNetworkManager.Discovery.Initialize();
 
         // Pede para o NetworkDiscovery começar a ouvir pacotes de broadcast.
-        NetworkServer.Reset();
         MyNetworkManager.Discovery.StartAsClient();
 
         // Cria um botão para cada uma das partidas suportadas.
         MatchButtonTemplate.SetActive(false);
-        for (int i=0; i<_maxMatches; i++)
-        {
+        for (int i = 0; i < _maxMatches; i++) {
             var buttonObject = Instantiate(MatchButtonTemplate, MatchButtonTemplate.transform.parent);
             _currentMatches.Add(buttonObject);
 
@@ -63,12 +66,24 @@ public class LocalGamesView : MonoBehaviour {
             int index = i;
             button.onClick.AddListener(() => OnMatchClicked(index));
         }
+    }
+    //Deleta todos os elementos existentes da lista de partidas e limpa ela caso o jogo reinicie
+    /*
+    private void DeleteMatches() {
+        for (int i = 0; i < _maxMatches; i++) {
+            Destroy(_currentMatches[i]);
+        }
+        _currentMatches.Clear();
+    }
+    */
 
-        // Assina o evento do NetworkManager que nos avisa sempre que
-        // um client se conectar.
+    private void Start()
+    {
         MyNetworkManager.onServerConnect += onServerConnect;
-        //TODO Adicionado por mim (Vinicius) perguntar se necessário
         MyNetworkManager.onClientConnect += onClientConnect;
+        MyNetworkManager.onClientDisconnect += onClientDisconect;
+        MyNetworkManager.onServerDisconnect += onServerDisconect;
+        //TODO Adicionado por mim (Vinicius) perguntar se necessário
     }
 
     /*
@@ -116,6 +131,16 @@ public class LocalGamesView : MonoBehaviour {
         CanvasProcess.instance.StartGame();
     }
 
+    public void onServerDisconect(NetworkConnection conn) {
+        _isConnected = false;
+        print("Server Disconect");
+    }
+
+
+    /*
+     * CÓDIGO DO CLIENTE
+     */
+
     //TODO questionar se necessário
     public void onClientConnect(NetworkConnection conn) {
         print("GotHere");
@@ -130,9 +155,10 @@ public class LocalGamesView : MonoBehaviour {
         CanvasProcess.instance.StartGame();
     }
 
-    /*
-     * CÓDIGO DO CLIENTE
-     */
+    public void onClientDisconect(NetworkConnection conn) {
+        _isConnected = false;
+        print("Client Disconect");
+    }
 
     // Chamada quando um botão relacionado a uma partida é clicado.
     private void OnMatchClicked(int index)
@@ -215,7 +241,7 @@ public class LocalGamesView : MonoBehaviour {
             _currentMatches[i].GetComponentInChildren<Text>().text = "Join match: " + matchName;
             i++;
         }
-        for(; i< _currentMatches.Count; i++)
+        for(;i < _currentMatches.Count; i++)
         {
             _currentMatches[i].SetActive(false);
         }

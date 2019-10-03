@@ -11,6 +11,8 @@ public class CanvasProcess : MonoBehaviour {
 
     public GameObject Image;
     public GameObject MultiuplayerMenu;
+    public GameObject OnlineMenu;
+    public GameObject LocalMenu;
 
     public GameObject endingButton;
     public Animator frame = null;
@@ -85,6 +87,10 @@ public class CanvasProcess : MonoBehaviour {
 
     public bool GetMultiplayerMenu() {
         return MultiuplayerMenu.activeSelf;
+    }
+
+    public void SetMultiplayerMenu(GameObject obj) {
+        MultiuplayerMenu = obj;
     }
 
     public void StartGame() {

@@ -7,10 +7,16 @@ using UnityEngine.Networking.Match;
 
 public class MyNetworkManager : NetworkManager
 {
+    public bool online;
+
     public static event Action<NetworkConnection> onServerConnect;
     public static event Action<NetworkConnection> onClientConnect;
     public static event Action<NetworkConnection> onClientDisconnect;
     public static event Action<NetworkConnection> onServerDisconnect;
+
+    private void Start() {
+        online = false;
+    }
 
     public static NetworkDiscovery Discovery 
     {
@@ -71,5 +77,8 @@ public class MyNetworkManager : NetworkManager
     {
         base.OnClientError(conn, errorCode);      
     }
+
+    //usado para setar qual será a interface usada (LocalGames / OnlineGames)
+    //chamado apenas no menu multiplayer ao clicar uma das opções
 
 }

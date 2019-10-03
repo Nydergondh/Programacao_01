@@ -27,7 +27,7 @@ public class OnlineGameView : MonoBehaviour {
     private bool _isConnected;
 
     // Número máximo de partidas suportadas.
-    private const int _maxMatches = 10;
+    private const int _maxMatches = 5;
 
     // Botões de partidas que foram criados.
     private List<GameObject> _currentMatches = new List<GameObject>();
@@ -37,7 +37,20 @@ public class OnlineGameView : MonoBehaviour {
      */
 
     private void Start() {
+        // Assina o evento do NetworkManager que nos avisa sempre que
+        // um client se conectar.
+        MyNetworkManager.onServerConnect += OnServerConnect;
+        MyNetworkManager.onClientConnect += OnClientConnect;
+        MyNetworkManager.onClientDisconnect += onClientDisconect;
+        MyNetworkManager.onServerDisconnect += onServerDisconect;
+
+    }
+
+    public void Inicialize() {
+
         // Reinicia o estado da UI para o inicial
+        DeleteMatches();
+
         ConnectRoot.SetActive(true);
         WaitingForPlayersRoot.SetActive(false);
         ConnectingRoot.SetActive(false);
@@ -57,13 +70,19 @@ public class OnlineGameView : MonoBehaviour {
             button.onClick.AddListener(() => OnMatchClicked(index));
         }
 
-        // Assina o evento do NetworkManager que nos avisa sempre que
-        // um client se conectar.
-        MyNetworkManager.onServerConnect += OnServerConnect;
-        MyNetworkManager.onClientConnect += OnClientConnect;
-
         // Inicializa o NetworkManager para utilizar o matchmaker.
         MyNetworkManager.singleton.StartMatchMaker();
+    }
+
+    private void DeleteMatches() {
+
+        for (int i = 0; i < _currentMatches.Count; i++) {
+            if (_currentMatches[i] != null) {
+                Destroy(_currentMatches[i]);
+            }
+        }
+
+        _currentMatches.Clear();
     }
 
     private void OnClientConnect(NetworkConnection obj) {
@@ -89,7 +108,7 @@ public class OnlineGameView : MonoBehaviour {
         // Cria uma partida, passando o callback do NetworkManager.
         MyNetworkManager.Match.CreateMatch(_matchName, 2, true, "", "", "", 0, 0,
             MyNetworkManager.singleton.OnMatchCreate);
-
+        print(_matchName);
         // Atualiza a UI para o estado "waiting for players".
         ConnectRoot.SetActive(false);
         WaitingForPlayersRoot.SetActive(true);
@@ -109,6 +128,12 @@ public class OnlineGameView : MonoBehaviour {
         CanvasProcess.instance.StartGame();
     }
 
+
+    public void onServerDisconect(NetworkConnection conn) {
+        _isConnected = false;
+        print("Server Disconect");
+    }
+
     /*
      * CÓDIGO DO CLIENTE
      */
@@ -125,6 +150,11 @@ public class OnlineGameView : MonoBehaviour {
         // Atualiza a UI para o estado "conectando".
         ConnectRoot.SetActive(false);
         ConnectingRoot.SetActive(true);
+    }
+
+    public void onClientDisconect(NetworkConnection conn) {
+        _isConnected = false;
+        print("Client Disconect");
     }
 
     private void Update() {
