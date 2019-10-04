@@ -84,7 +84,7 @@ public class LocalGamesView : MonoBehaviour {
         MyNetworkManager.onServerConnect += onServerConnect;
         MyNetworkManager.onClientConnect += onClientConnect;
         MyNetworkManager.onClientDisconnect += onClientDisconnect;
-        //MyNetworkManager.onServerDisconnect += onServerDisconnect;
+        MyNetworkManager.onServerDisconnect += onServerDisconnect;
         //TODO Adicionado por mim (Vinicius) perguntar se necessário
     }
 
@@ -132,12 +132,12 @@ public class LocalGamesView : MonoBehaviour {
         //adjusting the screen to start the game
         CanvasProcess.instance.StartGame();
     }
-    /*
+    
     public void onServerDisconnect(NetworkConnection conn) {
         _isConnected = false;
         print("Server Disconect");
     }
-    */
+    
 
     /*
      * CÓDIGO DO CLIENTE

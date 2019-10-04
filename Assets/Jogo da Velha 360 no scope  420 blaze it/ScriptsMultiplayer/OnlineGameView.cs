@@ -42,7 +42,7 @@ public class OnlineGameView : MonoBehaviour {
         MyNetworkManager.onServerConnect += OnServerConnect;
         MyNetworkManager.onClientConnect += OnClientConnect;
         MyNetworkManager.onClientDisconnect += onClientDisconect;
-        //MyNetworkManager.onServerDisconnect += onServerDisconect;
+        MyNetworkManager.onServerDisconnect += onServerDisconect;
 
     }
 
@@ -130,12 +130,12 @@ public class OnlineGameView : MonoBehaviour {
         //adjusting the screen to start the game
         CanvasProcess.instance.StartGame();
     }
-    /*
+    
     public void onServerDisconect(NetworkConnection conn) {
         _isConnected = false;
         print("Server Disconect");
     }
-    */
+    
     /*
      * CÓDIGO DO CLIENTE
      */
@@ -156,7 +156,6 @@ public class OnlineGameView : MonoBehaviour {
 
     public void onClientDisconect(NetworkConnection info) {
         _isConnected = false;
-        print("Client Disconect");
     }
 
     private void Update() {

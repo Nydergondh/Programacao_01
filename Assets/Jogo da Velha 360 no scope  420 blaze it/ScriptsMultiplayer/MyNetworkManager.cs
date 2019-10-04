@@ -66,16 +66,33 @@ public class MyNetworkManager : NetworkManager
     public override void OnClientDisconnect(NetworkConnection conn) {
         base.OnClientDisconnect(conn);
         onClientDisconnect?.Invoke(conn);
+        if (!BoardManager.instance.endGame) {
+            CanvasProcess.instance.endingButton.SetActive(true);
+        }
     }
-    /*
+    
     public override void OnServerDisconnect(NetworkConnection conn) {
         base.OnServerDisconnect(conn);
         onServerDisconnect?.Invoke(conn);
+        if (!BoardManager.instance.endGame) {
+            CanvasProcess.instance.endingButton.SetActive(true);
+        }
     }
-    */
-    public override void OnClientError(NetworkConnection conn, int errorCode)
-    {
-        base.OnClientError(conn, errorCode);      
+    
+    public override void OnClientError(NetworkConnection conn, int errorCode){
+        base.OnClientError(conn, errorCode);
+        print(conn.isConnected+ " Client");
+        if (!conn.isConnected && !BoardManager.instance.endGame) {
+            print("CalledClient");
+        }
+    }
+
+    public override void OnServerError(NetworkConnection conn, int errorCode){
+        base.OnServerError(conn, errorCode);
+        print(conn.isConnected + " Server");
+        if (!conn.isConnected && !BoardManager.instance.endGame) {
+            print("CalledServer");
+        }
     }
 
     //usado para setar qual será a interface usada (LocalGames / OnlineGames)
