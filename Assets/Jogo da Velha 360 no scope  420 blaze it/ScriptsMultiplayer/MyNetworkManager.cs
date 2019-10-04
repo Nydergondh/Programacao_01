@@ -67,12 +67,12 @@ public class MyNetworkManager : NetworkManager
         base.OnClientDisconnect(conn);
         onClientDisconnect?.Invoke(conn);
     }
-
+    /*
     public override void OnServerDisconnect(NetworkConnection conn) {
         base.OnServerDisconnect(conn);
         onServerDisconnect?.Invoke(conn);
     }
-
+    */
     public override void OnClientError(NetworkConnection conn, int errorCode)
     {
         base.OnClientError(conn, errorCode);      

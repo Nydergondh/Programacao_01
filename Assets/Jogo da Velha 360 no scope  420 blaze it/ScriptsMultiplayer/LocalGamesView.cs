@@ -36,7 +36,8 @@ public class LocalGamesView : MonoBehaviour {
      */
     public void Inicialize() {
 
-        //DeleteMatches();
+        DeleteMatches();
+        _isConnected = false;
 
         ConnectRoot.SetActive(true);
         WaitingForPlayersRoot.SetActive(false);
@@ -68,21 +69,22 @@ public class LocalGamesView : MonoBehaviour {
         }
     }
     //Deleta todos os elementos existentes da lista de partidas e limpa ela caso o jogo reinicie
-    /*
     private void DeleteMatches() {
-        for (int i = 0; i < _maxMatches; i++) {
-            Destroy(_currentMatches[i]);
+        if (_currentMatches.Count > 0) {
+            for (int i = 0; i < _maxMatches; i++) {
+                Destroy(_currentMatches[i]);
+            }
+            _currentMatches.Clear();
         }
-        _currentMatches.Clear();
     }
-    */
+    
 
     private void Start()
     {
         MyNetworkManager.onServerConnect += onServerConnect;
         MyNetworkManager.onClientConnect += onClientConnect;
-        MyNetworkManager.onClientDisconnect += onClientDisconect;
-        MyNetworkManager.onServerDisconnect += onServerDisconect;
+        MyNetworkManager.onClientDisconnect += onClientDisconnect;
+        //MyNetworkManager.onServerDisconnect += onServerDisconnect;
         //TODO Adicionado por mim (Vinicius) perguntar se necessário
     }
 
@@ -130,12 +132,12 @@ public class LocalGamesView : MonoBehaviour {
         //adjusting the screen to start the game
         CanvasProcess.instance.StartGame();
     }
-
-    public void onServerDisconect(NetworkConnection conn) {
+    /*
+    public void onServerDisconnect(NetworkConnection conn) {
         _isConnected = false;
         print("Server Disconect");
     }
-
+    */
 
     /*
      * CÓDIGO DO CLIENTE
@@ -155,10 +157,11 @@ public class LocalGamesView : MonoBehaviour {
         CanvasProcess.instance.StartGame();
     }
 
-    public void onClientDisconect(NetworkConnection conn) {
+    public void onClientDisconnect(NetworkConnection info) {
         _isConnected = false;
         print("Client Disconect");
     }
+
 
     // Chamada quando um botão relacionado a uma partida é clicado.
     private void OnMatchClicked(int index)

@@ -42,7 +42,7 @@ public class OnlineGameView : MonoBehaviour {
         MyNetworkManager.onServerConnect += OnServerConnect;
         MyNetworkManager.onClientConnect += OnClientConnect;
         MyNetworkManager.onClientDisconnect += onClientDisconect;
-        MyNetworkManager.onServerDisconnect += onServerDisconect;
+        //MyNetworkManager.onServerDisconnect += onServerDisconect;
 
     }
 
@@ -50,6 +50,9 @@ public class OnlineGameView : MonoBehaviour {
 
         // Reinicia o estado da UI para o inicial
         DeleteMatches();
+
+        MyNetworkManager.singleton.StopMatchMaker();
+
 
         ConnectRoot.SetActive(true);
         WaitingForPlayersRoot.SetActive(false);
@@ -69,6 +72,7 @@ public class OnlineGameView : MonoBehaviour {
             int index = i;
             button.onClick.AddListener(() => OnMatchClicked(index));
         }
+        _isConnected = false;
 
         // Inicializa o NetworkManager para utilizar o matchmaker.
         MyNetworkManager.singleton.StartMatchMaker();
@@ -116,7 +120,6 @@ public class OnlineGameView : MonoBehaviour {
 
     // Chamada pelo NetworkManager quando um cliente conecta, através da assinatura feita no Start().
     private void OnServerConnect(NetworkConnection conn) {
-        Debug.Log("Alguem conectou!");
 
         // Atualiza o estado da UI para "in game".
         WaitingForPlayersRoot.SetActive(false);
@@ -127,13 +130,12 @@ public class OnlineGameView : MonoBehaviour {
         //adjusting the screen to start the game
         CanvasProcess.instance.StartGame();
     }
-
-
+    /*
     public void onServerDisconect(NetworkConnection conn) {
         _isConnected = false;
         print("Server Disconect");
     }
-
+    */
     /*
      * CÓDIGO DO CLIENTE
      */
@@ -152,7 +154,7 @@ public class OnlineGameView : MonoBehaviour {
         ConnectingRoot.SetActive(true);
     }
 
-    public void onClientDisconect(NetworkConnection conn) {
+    public void onClientDisconect(NetworkConnection info) {
         _isConnected = false;
         print("Client Disconect");
     }
@@ -165,7 +167,6 @@ public class OnlineGameView : MonoBehaviour {
                 // Chama o refresh de partidas.
                 RefreshMatches();
                 UpdateButtons();
-
                 _timeToUpdate = MatchmakingUpdatePeriod;
             }
         }
