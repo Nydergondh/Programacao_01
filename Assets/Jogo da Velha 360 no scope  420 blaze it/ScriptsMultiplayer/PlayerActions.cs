@@ -6,8 +6,11 @@ using UnityEngine;
 public class PlayerActions : NetworkBehaviour {
     public LayerMask layer;
     private float rayDistance = 50;
+    private bool played; //variavel que controla se voce ja jogou sua vez
+                        //para impedir que no tempo que o server atualize voce possa jogar em outras posições
     private PositionsMultiPlayer pos = null;
     public int playerID;
+
 
     void Start() {
 
@@ -15,13 +18,14 @@ public class PlayerActions : NetworkBehaviour {
 
         BoardManager.instance.AddPlayer(this);
 
+        played = false;
     }
 
     void Update() {
 
         if (!isLocalPlayer) return;
 
-        if (Input.GetMouseButtonDown(0) && BoardManager.currentPlayer == playerID && !BoardManager.instance.endGame) {
+        if (Input.GetMouseButtonDown(0) && BoardManager.currentPlayer == playerID && !BoardManager.instance.endGame && !played) {
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
@@ -30,6 +34,7 @@ public class PlayerActions : NetworkBehaviour {
                 if (pos != null) {
                     if (!CanvasProcess.instance.GetMultiplayerMenu() && !pos.isOccupied && BoardManager.instance.enabled) {
                         //passa o parametro que ocupa a posição e a atualização de qual posição é o last pos
+                        played = true;
                         CmdDoMove(pos.boardLocation);
                     }
 
@@ -54,6 +59,7 @@ public class PlayerActions : NetworkBehaviour {
         BoardManager.instance.onPieceSpawned();
 
         BoardManager.instance.PlayInPosition();
+        played = false;
     }
     
     //Pede para o server replicar o prenchimento da posição e a atualização do lastPos
