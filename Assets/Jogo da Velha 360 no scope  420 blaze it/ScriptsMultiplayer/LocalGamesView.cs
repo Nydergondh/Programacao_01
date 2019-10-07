@@ -131,6 +131,8 @@ public class LocalGamesView : MonoBehaviour {
 
         //adjusting the screen to start the game
         CanvasProcess.instance.StartGame();
+        //added to stop the match broadcast when the server is up and running the game with a client
+        MyNetworkManager.Discovery.StopBroadcast();
     }
     
     public void onServerDisconnect(NetworkConnection conn) {
@@ -155,6 +157,7 @@ public class LocalGamesView : MonoBehaviour {
 
         //adjust the screen to the game
         CanvasProcess.instance.StartGame();
+
     }
 
     public void onClientDisconnect(NetworkConnection info) {
@@ -213,7 +216,7 @@ public class LocalGamesView : MonoBehaviour {
         foreach (var match in MyNetworkManager.Discovery.broadcastsReceived.Values)
         {
             // Remove duplicatas (acontece em loopback quando a máquina tem mais de uma placa de rede)
-            if(_matches.Any(item => EqualsArray(item.broadcastData, match.broadcastData)))
+            if (_matches.Any(item => EqualsArray(item.broadcastData, match.broadcastData)))
             {
                 continue;
             }

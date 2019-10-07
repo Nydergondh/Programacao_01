@@ -14,7 +14,7 @@ public class PlayerActions : NetworkBehaviour {
 
     void Start() {
 
-        MyNetworkManager.onClientDisconnect += OnClientDisconnect;
+        MyNetworkManager.onClientDisconnect += OnPlayerClientDisconnect;
 
         BoardManager.instance.AddPlayer(this);
 
@@ -74,12 +74,22 @@ public class PlayerActions : NetworkBehaviour {
         return null;
     }
 
-    //chama no server quando um cliente disconectar
-    public void OnClientDisconnect(NetworkConnection info) {
+    //chama no server quando um cliente disconectar para destruir o objeto que não representa o player local
+    public void OnPlayerClientDisconnect(NetworkConnection info) {
         if (this != null) {
             if (!isLocalPlayer) {
                 Destroy(this);
             }
+        }
+    }
+    //função que retorna 0 caso não seja o player local e o Id do player caso seja o Player Local
+    //Usada no BoardManager quando o jogo terminar para mostrar se voce perdeu ou venceu a partida
+    public int ReturnIdLocalPlayer() {
+        if (isLocalPlayer) {
+            return playerID;
+        }
+        else {
+            return 0;
         }
     }
     

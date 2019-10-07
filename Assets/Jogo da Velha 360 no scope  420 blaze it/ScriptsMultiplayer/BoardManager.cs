@@ -74,6 +74,21 @@ public class BoardManager : MonoBehaviour {
         if (CheckWinInt(positions[lastPos].PieceType, tabuleiro) && currentPlayer == 2) { //check if the player has won
 
             Debug.Log("Player 2 has Won");
+            
+            foreach (PlayerActions player in players) {
+                if(player.ReturnIdLocalPlayer() == 2) {
+                    //win
+                    print("Won");
+                }
+                else if(player.ReturnIdLocalPlayer() == 1) {
+                    //lost
+                    print("Lost");
+                }
+                else {
+                    //nothing (not local player)
+                }
+            }
+
             endGame = true;
             ChangeAudio(1);
             canvas.GetComponent<CanvasProcess>().thatsAllFolks(endGame);
@@ -81,6 +96,23 @@ public class BoardManager : MonoBehaviour {
 
         else if (CheckWinInt(positions[lastPos].PieceType, tabuleiro) && currentPlayer == 1) {
             Debug.Log("Player 1 has Won");
+
+            foreach (PlayerActions player in players) {
+                if (player.ReturnIdLocalPlayer() == 1) {
+                    //win
+                    print("Won");
+                    break;
+                }
+                else if (player.ReturnIdLocalPlayer() == 2) {
+                    //lost
+                    print("Lost");
+                    break;
+                }
+                else {
+                    continue;
+                }
+            }
+
             endGame = true;
             ChangeAudio(1);
             canvas.GetComponent<CanvasProcess>().thatsAllFolks(endGame);
@@ -88,6 +120,7 @@ public class BoardManager : MonoBehaviour {
 
 
         else if (!CheckWinInt(positions[lastPos].PieceType, tabuleiro) && CheckBoardFullInt(tabuleiro)) {
+            //deu velha
             Debug.Log("Deu Velha");
             endGame = true;
             ChangeAudio(1);
