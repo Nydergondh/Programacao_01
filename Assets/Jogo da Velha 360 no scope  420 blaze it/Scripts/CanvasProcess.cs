@@ -16,8 +16,10 @@ public class CanvasProcess : MonoBehaviour {
 
     public GameObject endingButton;
     public Animator frame = null;
-    public Animator text = null;
     public AudioSource music = null;
+
+    public RawImage Ending;
+    public RawImage[] EndingImages;
 
     //delegate to play end scene
     public delegate void ThatsAllFolks(bool value);
@@ -35,14 +37,12 @@ public class CanvasProcess : MonoBehaviour {
         }
     }
 
-    void Start()
-    {
+    void Start() {
         thatsAllFolks += SetTaf;
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
         if (taf == true) {
             playClips();
             StartCoroutine(ActiveEndButton());
@@ -57,7 +57,6 @@ public class CanvasProcess : MonoBehaviour {
     public void playClips() {
         taf = false;
         frame.Play("TAF2");
-        text.Play("TAF");
         music.Play();
     }
 
@@ -65,7 +64,7 @@ public class CanvasProcess : MonoBehaviour {
 
         yield return new WaitForSeconds(5f);
         endingButton.SetActive(true);
-        
+
     }
 
     public void QuitGame() {
@@ -80,8 +79,7 @@ public class CanvasProcess : MonoBehaviour {
 
     public void SetMenuBool(bool value) {
 
-        frame.SetBool("Menu",value);
-        text.SetBool("Menu", value);
+        frame.SetBool("Menu", value);
 
     }
 
@@ -104,5 +102,22 @@ public class CanvasProcess : MonoBehaviour {
 
     }
 
-    
+    public void WonScreen(int whoWon) {
+        if (whoWon == 1) {
+            //X ganhou
+            Ending.texture = EndingImages[whoWon - 1].texture;
+        }
+        else if (whoWon == 2) {
+            //O Ganhou
+            Ending.texture = EndingImages[whoWon - 1].texture;
+        }
+        else if (whoWon == 3) { 
+            //Deu Velha Anim
+            Ending.texture = EndingImages[whoWon - 1].texture;
+        }
+        else{
+            //NormalState
+            Ending.texture = EndingImages[3].texture;
+        }
+    }
 }

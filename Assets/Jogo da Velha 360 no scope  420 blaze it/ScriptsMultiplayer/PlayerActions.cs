@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PlayerActions : NetworkBehaviour {
     public LayerMask layer;
-    private float rayDistance = 50;
+    private float rayDistance = 100;
     private bool played; //variavel que controla se voce ja jogou sua vez
                         //para impedir que no tempo que o server atualize voce possa jogar em outras posições
     private PositionsMultiPlayer pos = null;
@@ -28,11 +28,14 @@ public class PlayerActions : NetworkBehaviour {
         if (Input.GetMouseButtonDown(0) && BoardManager.currentPlayer == playerID && !BoardManager.instance.endGame && !played) {
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
+            print("GotHere1");
             if (Physics.Raycast(ray, out hit, rayDistance ,layer)) {
                 pos = hit.collider.gameObject.GetComponent<PositionsMultiPlayer>();
+                print("GotHere2");
                 if (pos != null) {
+                    print("GotHere3");
                     if (!CanvasProcess.instance.GetMultiplayerMenu() && !pos.isOccupied && BoardManager.instance.enabled) {
+                        print("GotHere4");
                         //passa o parametro que ocupa a posição e a atualização de qual posição é o last pos
                         played = true;
                         CmdDoMove(pos.boardLocation);
