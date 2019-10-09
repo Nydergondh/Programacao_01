@@ -71,16 +71,16 @@ public class BoardManager : MonoBehaviour {
         //Spawns new piece and update the variables to make the player play the game
         PutPiece(positions[lastPos].transform.position);
 
-        if (CheckWinInt(positions[lastPos].PieceType, tabuleiro) && currentPlayer == 2) { //check if the player has won
+        if (CheckWinInt(positions[lastPos].PieceType, tabuleiro) && currentPlayer == 1) { //check if the player has won
 
             Debug.Log("Player 2 has Won");
             
             foreach (PlayerActions player in players) {
-                if(player.ReturnIdLocalPlayer() == 2) {
+                if(player.ReturnIdLocalPlayer() == 1) {
                     //win
                     print("Won");
                 }
-                else if(player.ReturnIdLocalPlayer() == 1) {
+                else if(player.ReturnIdLocalPlayer() == 2) {
                     //lost
                     print("Lost");
                 }
@@ -95,16 +95,16 @@ public class BoardManager : MonoBehaviour {
             canvas.GetComponent<CanvasProcess>().thatsAllFolks(endGame);
         }
 
-        else if (CheckWinInt(positions[lastPos].PieceType, tabuleiro) && currentPlayer == 1) {
+        else if (CheckWinInt(positions[lastPos].PieceType, tabuleiro) && currentPlayer == 2) {
             Debug.Log("Player 1 has Won");
             //checa se o player ganhou ou perdeu com uma função que retorna qual é o Id doplayer caso seja o player local, senão retorna 0
             foreach (PlayerActions player in players) {
-                if (player.ReturnIdLocalPlayer() == 1) {
+                if (player.ReturnIdLocalPlayer() == 2) {
                     //win
                     print("Won");
                     break;
                 }
-                else if (player.ReturnIdLocalPlayer() == 2) {
+                else if (player.ReturnIdLocalPlayer() == 1) {
                     //lost
                     print("Lost");
                     break;

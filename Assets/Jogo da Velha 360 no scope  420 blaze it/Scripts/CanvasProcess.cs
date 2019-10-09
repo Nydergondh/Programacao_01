@@ -103,17 +103,17 @@ public class CanvasProcess : MonoBehaviour {
     }
 
     public void WonScreen(int whoWon) {
-        if (whoWon == 1) {
+        if (whoWon == 0) {
             //X ganhou
-            Ending.texture = EndingImages[whoWon - 1].texture;
+            Ending.texture = EndingImages[whoWon].texture;
         }
-        else if (whoWon == 2) {
+        else if (whoWon == 1) {
             //O Ganhou
-            Ending.texture = EndingImages[whoWon - 1].texture;
+            Ending.texture = EndingImages[whoWon].texture;
         }
-        else if (whoWon == 3) { 
+        else if (whoWon == 2) { 
             //Deu Velha Anim
-            Ending.texture = EndingImages[whoWon - 1].texture;
+            Ending.texture = EndingImages[whoWon].texture;
         }
         else{
             //NormalState
