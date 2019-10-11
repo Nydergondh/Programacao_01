@@ -14,7 +14,12 @@ ModelImporter:
     3300000: X
     4300000: X
     10800000: Light.001
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Neon_1
+    second: {fileID: 2100000, guid: 0e88403ac5e1f0d489ba79bdb51efcc6, type: 2}
   materials:
     importMaterials: 1
     materialName: 0

@@ -14,7 +14,12 @@ ModelImporter:
     3300000: Circle  2
     4300000: Circle  2
     10800000: Light.000
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Neon_2
+    second: {fileID: 2100000, guid: 29bd73cab3be59947813b56229af130f, type: 2}
   materials:
     importMaterials: 1
     materialName: 0

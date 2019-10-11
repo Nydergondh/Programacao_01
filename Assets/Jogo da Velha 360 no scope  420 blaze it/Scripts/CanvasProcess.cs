@@ -57,7 +57,7 @@ public class CanvasProcess : MonoBehaviour {
     public void playClips() {
         taf = false;
         frame.Play("TAF2");
-        music.Play();
+        music.PlayOneShot(BoardManager.instance.clips[1]);//plays the finish sound
     }
 
     private IEnumerator ActiveEndButton() {

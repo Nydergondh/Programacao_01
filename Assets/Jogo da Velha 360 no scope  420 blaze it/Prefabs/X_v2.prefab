@@ -41,8 +41,8 @@ Light:
   m_Enabled: 1
   serializedVersion: 8
   m_Type: 2
-  m_Color: {r: 0, g: 0.70711195, b: 0.9245283, a: 1}
-  m_Intensity: 1
+  m_Color: {r: 0.066082224, g: 0.1708758, b: 0.9339623, a: 1}
+  m_Intensity: 10
   m_Range: 1
   m_SpotAngle: 30
   m_CookieSize: 10
@@ -126,7 +126,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 05ef3580cb3427544a1362827aa3d470, type: 3}
+  - {fileID: 2100000, guid: 0e88403ac5e1f0d489ba79bdb51efcc6, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
