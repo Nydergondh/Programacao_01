@@ -71,16 +71,16 @@ public class BoardManager : MonoBehaviour {
         //Spawns new piece and update the variables to make the player play the game
         PutPiece(positions[lastPos].transform.position);
 
-        if (CheckWinInt(positions[lastPos].PieceType, tabuleiro) && currentPlayer == 2) { //check if the player has won
+        if (CheckWinInt(positions[lastPos].PieceType, tabuleiro) && currentPlayer == 1) { //check if the player has won
 
             Debug.Log("Player 2 has Won");
             
             foreach (PlayerActions player in players) {
-                if(player.ReturnIdLocalPlayer() == 2) {
+                if(player.ReturnIdLocalPlayer() == 1) {
                     //win
                     print("Won");
                 }
-                else if(player.ReturnIdLocalPlayer() == 1) {
+                else if(player.ReturnIdLocalPlayer() == 2) {
                     //lost
                     print("Lost");
                 }
@@ -90,20 +90,21 @@ public class BoardManager : MonoBehaviour {
             }
 
             endGame = true;
+            CanvasProcess.instance.WonScreen(0);
             ChangeAudio(1);
             canvas.GetComponent<CanvasProcess>().thatsAllFolks(endGame);
         }
 
-        else if (CheckWinInt(positions[lastPos].PieceType, tabuleiro) && currentPlayer == 1) {
+        else if (CheckWinInt(positions[lastPos].PieceType, tabuleiro) && currentPlayer == 2) {
             Debug.Log("Player 1 has Won");
-
+            //checa se o player ganhou ou perdeu com uma função que retorna qual é o Id doplayer caso seja o player local, senão retorna 0
             foreach (PlayerActions player in players) {
-                if (player.ReturnIdLocalPlayer() == 1) {
+                if (player.ReturnIdLocalPlayer() == 2) {
                     //win
                     print("Won");
                     break;
                 }
-                else if (player.ReturnIdLocalPlayer() == 2) {
+                else if (player.ReturnIdLocalPlayer() == 1) {
                     //lost
                     print("Lost");
                     break;
@@ -114,6 +115,7 @@ public class BoardManager : MonoBehaviour {
             }
 
             endGame = true;
+            CanvasProcess.instance.WonScreen(1);
             ChangeAudio(1);
             canvas.GetComponent<CanvasProcess>().thatsAllFolks(endGame);
         }
@@ -121,8 +123,8 @@ public class BoardManager : MonoBehaviour {
 
         else if (!CheckWinInt(positions[lastPos].PieceType, tabuleiro) && CheckBoardFullInt(tabuleiro)) {
             //deu velha
-            Debug.Log("Deu Velha");
             endGame = true;
+            CanvasProcess.instance.WonScreen(2);
             ChangeAudio(1);
             canvas.GetComponent<CanvasProcess>().thatsAllFolks(endGame);
         }
@@ -166,7 +168,7 @@ public class BoardManager : MonoBehaviour {
         
         //if currentPlayer = 1 put an "X" else if currentPlayer is 2 then put a "O".
         if (currentPlayer == 1) {
-            Instantiate(xObject, piecePos, Quaternion.identity, parentPiece);
+            Instantiate(xObject, piecePos, Quaternion.identity, parentPiece);      
         }
         else if (currentPlayer == 2) {
             Instantiate(oObject, piecePos, Quaternion.identity, parentPiece);//Run MinMax Algorithm and place the piece in the best place
@@ -324,6 +326,8 @@ public class BoardManager : MonoBehaviour {
             GameObject obj = ts.gameObject;
             Destroy(obj);
         }
+        //come back to the thats all folks screen
+        CanvasProcess.instance.WonScreen(-1);
 
     }
 
